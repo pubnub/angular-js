@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Angular.JS &amp; PubNub Sample Application</title>
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" href="styles/bootstrap.css">
+    <link rel="stylesheet" href="styles/main.css">
+  </head>
+  <body ng-app="PubNubAngularApp">
+
+    <div class="container" ng-view></div>
+
+    <div id="pubnub"
+      pub-key="demo"
+      sub-key="demo"
+      ssl="off" origin="pubsub.pubnub.com"/>
+
+    <script src="http://cdn.pubnub.com/pubnub-3.5.3.js"></script>
+    <script src="components/angular/angular.js"></script>
+    <script src="scripts/pubnub-angular.js"></script>
+
+    <!-- build:js scripts/scripts.js -->
+    <script src="scripts/app.js"></script>
+    <script src="scripts/controllers/main.js"></script>
+    <!-- endbuild -->
+  </body>
+</html>

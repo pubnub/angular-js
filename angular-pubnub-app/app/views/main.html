@@ -1,0 +1,24 @@
+<div class="hero-unit">
+  <form>
+    <h1>Multi-Channel Demo</h1>
+    <p>Directions:</p>
+    <ol>
+      <li>Select a channel</li>
+      <li>Enter a message</li>
+    </ol>
+    <h2>channels</h2>
+    <select ng-model="selectedChannel">
+      <option ng-repeat="channel in channels">{{channel}}</option>
+    </select>
+    <input type="text" ng-model="newChannel" />
+    <input type="submit" ng-click="subscribe()" value="Add" />
+  </form>
+  <form>
+    <h2>messages</h2>
+    <ul>
+      <li ng-repeat="message in messages">{{message}}</li>
+    </ul>
+    <input type="text" ng-model="newMessage" />
+    <input type="submit" ng-click="publish()" value="Send Message" />
+  </form>
+</div>
