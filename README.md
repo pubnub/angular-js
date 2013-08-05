@@ -6,6 +6,13 @@ This library is in the experimental phase - your feedback is most welcome!
 
 Please share your ideas and use cases for future releases of the library.
 
+# What's in the Sample Application
+
+The sample application demonstrates a multi-channel chat room application
+that takes advantage of PubNub's high-performance, high-availability network
+for real-time communcation. Multi-channel operation is extremely efficient
+thanks to multiplexing support in the PubNub client library.
+
 
 # Running the Sample App
 
