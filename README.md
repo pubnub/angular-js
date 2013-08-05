@@ -10,6 +10,7 @@ Please share your ideas and use cases for future releases of the library.
 # Running the Sample App
 
 1. git clone the app
+1. cd angular-pubnub-app
 1. npm install
 1. bower install
 1. grunt server
