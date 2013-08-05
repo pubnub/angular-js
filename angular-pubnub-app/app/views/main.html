@@ -7,18 +7,21 @@
       <li>Enter a message</li>
     </ol>
     <h2>channels</h2>
-    <select ng-model="selectedChannel">
-      <option ng-repeat="channel in channels">{{channel}}</option>
-    </select>
+    <div>
+      <span style="margin-right:8px;"
+        ng-class="{label:true, 'label-info': channel == selectedChannel}"
+        ng-repeat="channel in channels" ng-click='select(channel)'>{{channel}}</span>
+    </div>
+    <br />
     <input type="text" ng-model="newChannel" />
     <input type="submit" ng-click="subscribe()" value="Add" />
   </form>
   <form>
     <h2>messages</h2>
+    <input type="text" ng-model="newMessage" />
+    <input type="submit" ng-click="publish()" value="Send Message" />
     <ul>
       <li ng-repeat="message in messages">{{message}}</li>
     </ul>
-    <input type="text" ng-model="newMessage" />
-    <input type="submit" ng-click="publish()" value="Send Message" />
   </form>
 </div>
