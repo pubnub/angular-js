@@ -36,6 +36,8 @@ in 7 broadcast channels - the server and client library takes care of combining
 and separating messages on a single channel. This is especially useful for
 power-conservation on mobile devices.
 
+You can check out the sample application online at http://pubnub.github.io/angular-js/
+
 
 # Running the Sample App
 
