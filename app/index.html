@@ -4,8 +4,11 @@
     <meta charset="utf-8">
     <title>Angular.JS &amp; PubNub Sample Application</title>
     <meta name="viewport" content="width=device-width">
+
+    <!-- build:css styles/main.css -->
     <link rel="stylesheet" href="styles/bootstrap.css">
     <link rel="stylesheet" href="styles/main.css">
+    <!-- endbuild -->
   </head>
   <body ng-app="PubNubAngularApp">
 
@@ -18,9 +21,9 @@
 
     <script src="http://cdn.pubnub.com/pubnub-3.5.3.js"></script>
     <script src="components/angular/angular.js"></script>
-    <script src="scripts/pubnub-angular.js"></script>
 
-    <!-- build:js scripts/scripts.js -->
+    <!-- build:js(.tmp) scripts/scripts.js -->
+    <script src="scripts/pubnub-angular.js"></script>
     <script src="scripts/app.js"></script>
     <script src="scripts/controllers/main.js"></script>
     <!-- endbuild -->
