@@ -21,6 +21,13 @@ module.exports = function (grunt) {
   grunt.initConfig({
     yeoman: yeomanConfig,
     watch: {
+	  haml: {
+        files: [
+          '<%= yeoman.app %>/*.haml',
+          '<%= yeoman.app %>/views/{,*/}*.haml'
+        ],
+        tasks: ['haml:dist']
+      },
       coffee: {
         files: ['<%= yeoman.app %>/scripts/{,*/}*.coffee'],
         tasks: ['coffee:dist']
@@ -102,6 +109,20 @@ module.exports = function (grunt) {
       unit: {
         configFile: 'karma.conf.js',
         singleRun: true
+      }
+    },
+    haml: {
+      options: {
+        language: 'ruby'
+      },
+      dist: {
+        files: [{
+          expand: true,
+          cwd: '<%= yeoman.app %>',
+          src: '{,*/}*.haml',
+          dest: '.tmp',
+          ext: '.html'
+        }]
       }
     },
     coffee: {
@@ -264,6 +285,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('server', [
     'clean:server',
+    'haml:dist',
     'coffee:dist',
     'compass:server',
     'livereload-start',
@@ -274,6 +296,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('test', [
     'clean:server',
+    'haml',
     'coffee',
     'compass',
     'connect:test',
@@ -284,6 +307,7 @@ module.exports = function (grunt) {
     'clean:dist',
     'jshint',
     'test',
+    'haml',
     'coffee',
     'compass:dist',
     'useminPrepare',

@@ -1,0 +1,158 @@
+<div class='container'>
+<article>
+<hr>
+<section id='getting_started'>
+<div class='holder'></div>
+<div class='frame'>
+<h2>Getting Started</h2>
+<p>The HTML page includes 3 key libraries:</p>
+<ul>
+<li>The core PubNub JS Library (generally from the CDN)</li>
+<li>AngularJS (usually as a Bower component)</li>
+<li>PubNub Angular (copy & paste for now - bower component coming soon!)</li>
+</ul>
+<p>The HTML code looks like this:</p>
+<pre class='well'>&lt;script src=&quot;http://cdn.pubnub.com/pubnub-3.5.3.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;components/angular/angular.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;scripts/pubnub-angular.js&quot;&gt;&lt;/script&gt;</pre>
+<p>The app is Angular-enabled with an <code>ng-app</code> attribute:</p>
+<pre class='well'>&lt;body ng-app=&quot;PubNubAngularApp&quot;&gt;</pre>
+<p>Where 'PubNubAngularApp' is the name of the Angular module containing our app.</p>
+<p>The code for the app lives in:</p>
+<pre class='well'>&lt;script src=&quot;scripts/app.js&quot;&gt;&lt;/script&gt;</pre>
+</div>
+</section>
+<hr>
+<section id='angular_api'>
+<div class='holder'></div>
+<div class='frame'>
+<h2>The PubNub Angular API</h2>
+<p>The PubNub Angular API lives in the <code>scripts/pubnub-angular.js</code> file.</p>
+<p>Notice the dependency on the PubNub Angular library (<code>pubnub.angular.service</code>):</p>
+<pre class='well'>angular.module('PubNubAngularApp', [&quot;pubnub.angular.service&quot;])</pre>
+<p>The code for the controllers lives in:</p>
+<pre class='well'>&lt;script src=&quot;scripts/controllers/main.js&quot;&gt;&lt;/script&gt;</pre>
+<p>Now, the <code>PubNub</code> service can be injected into the controller by name!</p>
+<pre class='well'>.controller('JoinCtrl', function($scope, PubNub) { ... });</pre>
+<h4>Using the Special AngularJS PubNub API</h4>
+<p>Publishing to channels is trivial - just use the <code>PubNub.ngPublish()</code> method.</p>
+<pre class='well'>$scope.publish = function() {
+  PubNub.ngPublish({
+    channel: $scope.selectedChannel,
+    message: $scope.newMessage
+  });
+};</pre>
+<p>
+As you can see, we call the PubNub publish method passing in the desired
+channel and message to transmit. It is also possible to transmit structured
+data as JSON objects, so go wild!
+</p>
+<p>
+It's not necessary to subscribe to a channel in order to publish to a channel.
+</p>
+<p>
+Subscribing to channels is accomplished by calling the <code>PubNub.ngSubscribe()</code>
+method. After the channel is subscribed, the app can register root scope message events
+by calling <code>$rootScope.$on</code> with the event string returned by
+<code>PubNub.ngMsgEv(channel)</code>.
+</p>
+<pre class='well'>$scope.subscribe = function() {
+  ...
+  PubNub.ngSubscribe({ channel: theChannel })
+  ...
+  $rootScope.$on(PubNub.ngMsgEv(theChannel), function(event, payload) {
+    // payload contains message, channel, env...
+    console.log('got a message event:', payload);    
+  })</pre>
+<p>
+This is the core of the PubNub API - allowing clients to subscribe and
+publish to channels, and have those events propagate in real-time to other
+applications connected to the same channels.
+</p>
+<h4>Integrating Presence Events</h4>
+<p>
+It's also easy to integrate presence events using the Angular API. In
+the example above, we just add an additional couple lines of code to
+call the <code>PubNub.ngHereNow()</code> method (retrieve current users), and register
+for presence events by calling <code>$rootScope.$on</code> with the event string
+returned by <code>PubNub.ngPrsEv(channel)</code>.
+</p>
+<pre class='well'>$scope.subscribe = function() {
+  ...
+  PubNub.ngSubscribe({ channel: theChannel })
+  $rootScope.$on(PubNub.ngMsgEv(theChannel), function(event, payload) { ... })
+  ...
+  $rootScope.$on(PubNub.ngPrsEv(theChannel), function(event, payload) {
+    // payload contains message, channel, env...
+    console.log('got a presence event:', payload);
+  })
+
+  PubNub.ngHereNow { channel: theChannel }</pre>
+<p>
+Using the presence event as a trigger, we retrieve the Presence
+list for a channel using the <code>PubNub.ngListPresence()</code>
+function.
+</p>
+<pre class='well'>$rootScope.$on(PubNub.ngPrsEv(theChannel), function(event, payload) {
+  $scope.users = PubNub.ngListPresence(theChannel);
+})</pre>
+<h4>Retrieving History</h4>
+<p>
+It can be super-handy to gather the previous several hundred messages
+from the PubNub channel history. The PubNub Angular API makes this easy
+by bridging the event model of the PubNub JS history API and the AngularJS
+event broadcast model so that historical messages come through the same
+event interface.
+</p>
+<pre class='well'>PubNub.ngHistory({channel:theChannel, count:500});
+// messages will be broadcast via $rootScope...</pre>
+<h4>Listing & Unsubscribing from Channels</h4>
+<p>
+The PubNub Angular API takes care of keeping track of currently subscribed
+channels. Call the <code>PubNub.ngListChannels()</code> method to return a
+list of presently subscribed channels.
+</p>
+<pre class='well'>$scope.channels = PubNub.ngListChannels()</pre>
+<p>
+Unsubscribing is as easy as calling the <code>PubNub.ngUnsubscribe()</code>
+method. The library even takes care of removing the Angular event handlers
+for you to prevent unsightly memory leaks!
+</p>
+<pre class='well'>PubNub.ngUnsubscribe({channel:theChannel})</pre>
+<h4>Using the PubNub API directly</h4>
+<p>
+We know that newer and fancier isn't always better. That's why we prefixed
+all of the special AngularJS methods with "ng". If you need to call the more
+common PubNub JS API methods, they're most likely already available from the
+PubNub member of the same name!
+</p>
+<p>For example:</p>
+<ul>
+<li><code>PubNub.publish</code></li>
+<li><code>PubNub.subscribe</code></li>
+<li><code>PubNub.unsubscribe</code></li>
+<li><code>PubNub.here_now</code></li>
+<li><code>PubNub.history</code></li>
+</ul>
+<p>
+<span class='label label-warning'>DANGER</span>
+These methods do not call the internal bookkeeping methods
+to make sure the channel lists and rootScope broadcast events
+get propagated, so use with care!
+</p>
+<p>
+For the most advanced PubNub API methods, you can call them by accessing
+<code>PubNub['_instance']</code>.
+</p>
+<p>
+Stay tuned though! We'll be adding support for more PubNub APIs soon.
+</p>
+</div>
+</section>
+</article>
+</div>
+<!-- %section#annotated_source -->
+<!-- .holder -->
+<!-- .frame -->
+<!-- %h2 Annotated Example Source -->
+<!-- %pre#source.well(ng-include=true src="'scripts/controllers/main.js'") -->
