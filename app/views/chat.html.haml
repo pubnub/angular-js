@@ -1,0 +1,72 @@
+.container
+  .col-md-12(ng-include=true src="'views/_nav.html'")
+
+.container
+  .col-md-12(ng-include=true src="'views/_happy.html'")
+
+.container
+  %section.chat-section#chat_application
+    .container
+      %h2
+        PubNub AngularJS Chat Example
+        
+      %p
+        %span.label.label-success(ng-show='selectedChannel') And... We're Live!
+        Channels are listed across the screen. To send a chat message,
+        enter a message in the box and click the 'Send' button.
+        
+
+      .dialog.dialog-success
+        %h6
+          Welcome {{data.username}}, click to select a channel below (
+          %a(ng-href="#/join") sign out
+          \)
+        %ul.list-unstyled.list-inline
+          %li.roomlabel(ng-repeat="channel in channels")
+            %a.btn.btn-info(href='' ng-click='subscribe(channel)' ng-class="{'label-default': user != data.username, 'label-info': (channel != selectedChannel), 'label-warning':(channel == selectedChannel)}")
+              %i.fa(ng-class="{'fa-spin':(channel == selectedChannel), 'fa-spinner':(channel == selectedChannel), 'fa-comments':(channel != selectedChannel)}")
+              {{channel}}
+
+          %li.roomlabel
+            %a.btn.btn-default(href="" ng-click='showCreate = !showCreate')
+              %i.fa.fa-magic
+              Create new...
+
+          %div(ng-show='showCreate')
+            %form(ng-submit='createChannel()')
+              %h6 Create New Room
+              .input-group
+                %input.input-sm.form-control(type="text" ng-model='newChannel' placeholder="Room Name")
+                %span.input-group-btn
+                  %input.input-sm.btn.btn-default(type='submit' value='Go!')
+              %br
+              %br
+
+      .row
+        .col-md-2
+          %small.marker Online Users
+          %ul.list-unstyled
+            %li(ng-repeat="user in users")
+              %span.label.btn-mini.userlabel(ng-class="{'label-default': user != data.username, 'label-info': (user == data.username)}")
+                %i.fa.fa-user
+                {{user}}
+
+        .col-md-10
+          %small.marker Chat History
+
+          %form(ng-submit='publish()')
+            .input-group
+              %input.input-sm.form-control(type="text" ng-model='newMessage')
+              %span.input-group-btn
+                %input.input-sm.btn.btn-default(type='submit' value='Send')
+
+          #chat_history.well.chatbox
+            %ul.list-unstyled
+              %li(ng-repeat="message in messages")
+                %i.fa.fa-comment
+                &nbsp;
+                {{message}}
+
+%div(ng-include=true src="'views/_content.html'")
+
+%div(ng-include=true src="'views/_footer.html'")
