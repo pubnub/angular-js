@@ -11,7 +11,7 @@
 <li>AngularJS (usually as a Bower component)</li>
 <li>PubNub Angular (copy & paste for now - bower component coming soon!)</li>
 </ul>
-<p>The HTML code looks like this:</p>
+<p>The HTML script includes look like this:</p>
 <pre class='well'>&lt;script src=&quot;http://cdn.pubnub.com/pubnub-3.5.3.js&quot;&gt;&lt;/script&gt;
 &lt;script src=&quot;components/angular/angular.js&quot;&gt;&lt;/script&gt;
 &lt;script src=&quot;scripts/pubnub-angular.js&quot;&gt;&lt;/script&gt;</pre>
@@ -23,10 +23,10 @@
 </div>
 </section>
 <hr>
-<section id='angular_api'>
+<section id='angular_api_tour'>
 <div class='holder'></div>
 <div class='frame'>
-<h2>The PubNub Angular API</h2>
+<h2>PubNub Angular API Tour</h2>
 <p>The PubNub Angular API lives in the <code>scripts/pubnub-angular.js</code> file.</p>
 <p>Notice the dependency on the PubNub Angular library (<code>pubnub.angular.service</code>):</p>
 <pre class='well'>angular.module('PubNubAngularApp', [&quot;pubnub.angular.service&quot;])</pre>
@@ -119,35 +119,49 @@ method. The library even takes care of removing the Angular event handlers
 for you to prevent unsightly memory leaks!
 </p>
 <pre class='well'>PubNub.ngUnsubscribe({channel:theChannel})</pre>
-<h4>Using the PubNub API directly</h4>
+</div>
+<hr>
+<section id='angular_api_reference'>
+<h2>PubNub Angular API Reference</h2>
+<h4>Core Angular API Methods</h4>
+<ul>
+<li><code>PubNub.init({publish_key:'your_key',subscribe_key:'your_key',uuid:'an_optional_user_uuid'})</code>: initialize the PubNub Angular API with the specified values</li>
+<li><code>PubNub.ngSubscribe({channel:aChannel,message:aCallback,presence:anotherCallback})</code>: subscribe to the specified channel; the provided callbacks (if any) will be invoked by wrapper functions that also maintain the Angular data structures for channels list and presence</li>
+<li><code>PubNub.ngUnsubscribe({channel:aChannel})</code>: unsubscribe from the specified channel including any message/presence events</li>
+<li><code>PubNub.ngPublish({channel:aChannel,message:aMessage})</code>: publish a message to the specified channel</li>
+<li><code>PubNub.ngHistory({channel:aChannel})</code>: calls PUBNUB.history with the specified channel to produce root scope message broadcast events (make sure the code is subscribed to the channel and channel message events)</li>
+<li><code>PubNub.ngHereNow({channel:aChannel})</code>: calls PUBNUB.here_now with the specified channel to produce root scope presence broadcast events (make sure the code is subscribed to the channel and channel presence events)</li>
+<li><code>PubNub.ngListChannels()</code>: returns the list of channels that the PubNub Angular API is connected to</li>
+<li><code>PubNub.ngListPresence(channel)</code>: returns the list of subscribers for a channel</li>
+<li><code>PubNub.ngMsgEv(channel)</code>: returns the root scope broadcast event name for message events for a given channel</li>
+<li><code>PubNub.ngPrsEv(channel)</code>: returns the root scope broadcast event name for presence events for a given channel</li>
+</ul>
+<h4>Using the PubNub JS API directly (advanced)</h4>
 <p>
-We know that newer and fancier isn't always better. That's why we prefixed
-all of the special AngularJS methods with "ng". If you need to call the more
-common PubNub JS API methods, they're most likely already available from the
-PubNub member of the same name!
+In unusual cases where you need to access the PubNub API directly, we make it
+easy by exposing the PUBNUB methods via the <code>PubNub.jsapi.*</code>. So if
+you really need to call <code>PUBNUB.each()</code>, you can do it by calling
+<code>PubNub.jsapi.each()</code>.
 </p>
 <p>For example:</p>
 <ul>
-<li><code>PubNub.publish</code></li>
-<li><code>PubNub.subscribe</code></li>
-<li><code>PubNub.unsubscribe</code></li>
-<li><code>PubNub.here_now</code></li>
-<li><code>PubNub.history</code></li>
+<li><code>PubNub.jsapi.publish</code></li>
+<li><code>PubNub.jsapi.subscribe</code></li>
+<li><code>PubNub.jsapi.unsubscribe</code></li>
+<li><code>PubNub.jsapi.here_now</code></li>
+<li><code>PubNub.jsapi.history</code></li>
 </ul>
 <p>
-<span class='label label-warning'>DANGER</span>
-These methods do not call the internal bookkeeping methods
+<span class='label label-info'>NOTE</span>
+These methods do not call the internal AngularJS bookkeeping methods
 to make sure the channel lists and rootScope broadcast events
-get propagated, so use with care!
+get propagated - make sure you know what you're doing!
 </p>
 <p>
-For the most advanced PubNub API methods, you can call them by accessing
-<code>PubNub['_instance']</code>.
+And... Stay tuned! We're adding support for more PubNub APIs all the
+time.
 </p>
-<p>
-Stay tuned though! We'll be adding support for more PubNub APIs soon.
-</p>
-</div>
+</section>
 </section>
 </article>
 </div>
