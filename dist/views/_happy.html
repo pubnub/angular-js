@@ -1,17 +1,31 @@
-<div class='well'>
-<p>
-<span style='font-size:72px'>
+<div class='col-md-12'>
+<div class='row'>
+<div class='col-md-8 well'>
+<table>
+<tr>
+<td>
 <img src='images/icons/shield.svg' style='height:96px'>
-<img src='images/icons/map.svg' style='height:96px'>
+<br>
+<br>
 <img src='images/icons/girl.svg' style='height:96px'>
+</td>
+<td>
+<img src='http://www.pubnub.com/images/home/image_04.png'>
+</td>
+<td>
 <img src='images/icons/chat.svg' style='height:96px'>
+<br>
+<br>
 <img src='images/icons/dude.svg' style='height:96px'>
-</span>
-</p>
-<p>
-<h4 class='marker'>
+</td>
+</tr>
+</table>
+<h4>
 More AngularJS. More PubNub. More Fun.
 </h4>
+<p>
+There's a new AngularJS PubNub API in town, optimized to make
+building real-time web applications as easy as possible.
 </p>
 <p>
 We hope you'll enjoy this friendly and useful sample
@@ -21,9 +35,66 @@ application that weighs in at around 70 lines of coffeescript.
 To begin, please enter a username (or accept the random
 selection) and click Join to enter the chat area.
 </p>
-<p ng-show='selectedChannel'>
-<span class='label label-success'>Ready, Set, Go!</span>
-Channels are listed across the screen. To send a chat message,
-enter a message in the box and click the 'Send' button.
-</p>
+</div>
+<div class='col-md-4'>
+<div class='panel panel-default'>
+<div class='panel-heading'>
+<h3 class='panel-title'>
+<i class='fa fa-info-circle'></i>
+Exploring AngularJS and PubNub
+</h3>
+</div>
+<div class='panel-body'>
+<ul>
+<li>
+<a href='' onclick="scrl2('#chat_application')">The AngularJS Chat Application</a>
+</li>
+<li>
+<a href='' onclick="scrl2('#getting_started')">Getting Started</a>
+</li>
+<li>
+<a href='' onclick="scrl2('#angular_api_tour')">PubNub Angular API Tour</a>
+</li>
+<li>
+<a href='' onclick="scrl2('#angular_api_reference')">API Reference</a>
+</li>
+<li>
+<a href='https://github.com/pubnub/javascript'>
+<i class='fa fa-share'></i>
+PubNub JavaScript API
+</a>
+</li>
+<li>
+<a href='http://angularjs.org'>
+<i class='fa fa-share'></i>
+AngularJS Home
+</a>
+</li>
+</ul>
+</div>
+</div>
+<div class='panel panel-default panel-primary' ng-hide='selectedChannel'>
+<div class='panel-heading'>
+<h3 class='panel-title'>Join Chat</h3>
+</div>
+<div class='panel-body'>
+<ul class='list-unstyled'>
+<li>
+<label>
+Username
+</label>
+</li>
+<li>
+<input class='input-lg form-control' maxlength='20' ng-model='data.username' size='20' type='text'>
+</li>
+</ul>
+<ul class='list-unstyled'>
+<li>
+<input class='btn btn-block btn-primary' ng-click='join()' type='submit' value='Join'>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
 </div>

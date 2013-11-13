@@ -5,14 +5,25 @@
     c = {
       '_instance': null,
       '_channels': [],
-      '_presence': {}
+      '_presence': {},
+      'jsapi': {}
     };
-    _ref = ['subscribe', 'unsubscribe', 'publish', 'history', 'here_now', 'replay', 'map', 'each'];
+    _ref = ['map', 'each'];
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       k = _ref[_i];
       if ((typeof PUBNUB !== "undefined" && PUBNUB !== null ? PUBNUB[k] : void 0) instanceof Function) {
         (function(kk) {
           return c[kk] = function() {
+            var _ref1;
+            return (_ref1 = c['_instance']) != null ? _ref1[kk].apply(c['_instance'], arguments) : void 0;
+          };
+        })(k);
+      }
+    }
+    for (k in PUBNUB) {
+      if ((typeof PUBNUB !== "undefined" && PUBNUB !== null ? PUBNUB[k] : void 0) instanceof Function) {
+        (function(kk) {
+          return c['jsapi'][kk] = function() {
             var _ref1;
             return (_ref1 = c['_instance']) != null ? _ref1[kk].apply(c['_instance'], arguments) : void 0;
           };
@@ -109,7 +120,7 @@
       }
       (_base = c['_presence'])[_name = args.channel] || (_base[_name] = []);
       args = c._ngInstallHandlers(args);
-      return c.subscribe(args);
+      return c.jsapi.subscribe(args);
     };
     c.ngUnsubscribe = function(args) {
       var cpos;
@@ -120,21 +131,21 @@
       c['_presence'][args.channel] = null;
       delete $rootScope.$$listeners[c.ngMsgEv(args.channel)];
       delete $rootScope.$$listeners[c.ngPrsEv(args.channel)];
-      return c.unsubscribe(args);
+      return c.jsapi.unsubscribe(args);
     };
     c.ngPublish = function() {
       return c['_instance']['publish'].apply(c['_instance'], arguments);
     };
     c.ngHistory = function(args) {
       args.callback = c._ngFireMessages(args.channel);
-      return c.history(args);
+      return c.jsapi.history(args);
     };
     c.ngHereNow = function(args) {
       args = c._ngInstallHandlers(args);
       args.callback = args.presence;
       delete args.presence;
       delete args.message;
-      return c.here_now(args);
+      return c.jsapi.here_now(args);
     };
     c.ngMsgEv = function(channel) {
       return "pn-message:" + channel;
