@@ -1,0 +1,21 @@
+.chatbox {
+  font-family:Lato;
+  width:100%;
+  height:20em;
+  margin-top:6px;
+  overflow:scroll;
+}
+
+.userlabel {
+  margin-right:8px;
+  margin-top:6px;
+}
+
+.roomlabel {
+  margin-right:8px;
+  margin-top:6px;
+}
+
+#getting_started {
+  background-color:;
+}

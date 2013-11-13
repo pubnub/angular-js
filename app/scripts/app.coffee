@@ -3,8 +3,11 @@
 angular.module('PubNubAngularApp', ["pubnub.angular.service"])
   .config ($routeProvider) ->
     $routeProvider
-      .when '/',
-        templateUrl: 'views/main.html'
-        controller: 'MainCtrl'
+      .when '/join',
+        templateUrl: 'views/join.html'
+        controller: 'JoinCtrl'
+      .when '/chat',
+        templateUrl: 'views/chat.html'
+        controller: 'ChatCtrl'
       .otherwise
-        redirectTo: '/'
+        redirectTo: '/join'

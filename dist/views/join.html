@@ -1,0 +1,38 @@
+<div class='container col-md-12' ng-include src="'views/_nav.html'"></div>
+<div class='container'>
+<div class='col-md-8' ng-include src="'views/_happy.html'"></div>
+<div class='col-md-4'>
+<div class='panel panel-default panel-primary'>
+<div class='panel-heading'>
+<h3 class='panel-title'>Join Chat</h3>
+</div>
+<div class='panel-body'>
+<ul class='list-unstyled'>
+<li>
+<label>
+Username
+</label>
+</li>
+<li>
+<input class='input-lg form-control' maxlength='20' ng-model='data.username' size='20' type='text'>
+</li>
+</ul>
+<ul class='list-unstyled'>
+<li>
+<input class='btn btn-block btn-primary' ng-click='join()' type='submit' value='Join'>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class='container'>
+<section class='chat-section'>
+<div class='container'>
+<h2>PubNub AngularJS Chat Example</h2>
+<img class='img-rounded' src='images/screenshot.png' style='width:600px'>
+</div>
+</section>
+</div>
+<div ng-include src="'views/_content.html'"></div>
+<div ng-include src="'views/_footer.html'"></div>

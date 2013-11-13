@@ -1,0 +1,100 @@
+<div class='container col-md-12' ng-include src="'views/_nav.html'"></div>
+<div class='container'>
+<div class='col-md-8' ng-include src="'views/_happy.html'"></div>
+<div class='col-md-4'>
+<div class='panel panel-default'>
+<div class='panel-heading'>
+<h3 class='panel-title'>
+<i class='fa fa-info-circle'></i>
+For More Information
+</h3>
+</div>
+<div class='panel-body'>
+<ul>
+<li class='fa fa-share'>
+<a href='https://github.com/pubnub/javascript'>PubNub JavaScript API</a>
+</li>
+<li class='fa fa-share'>
+<a href='http://angularjs.org'>AngularJS Home</a>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class='container'>
+<section class='chat-section'>
+<div class='container'>
+<h2>PubNub AngularJS Chat Example</h2>
+<div class='dialog dialog-success'>
+<h6>
+Welcome {{data.username}}, please choose a channel below (
+<a ng-href='#/join'>sign out</a>
+)
+</h6>
+<ul class='list-unstyled list-inline'>
+<li class='roomlabel' ng-repeat='channel in channels'>
+<a class='btn btn-info' href='' ng-class="{'label-default': user != data.username, 'label-info': (channel != selectedChannel), 'label-warning':(channel == selectedChannel)}" ng-click='subscribe(channel)'>
+<i class='fa' ng-class="{'fa-spin':(channel == selectedChannel), 'fa-spinner':(channel == selectedChannel), 'fa-comments':(channel != selectedChannel)}"></i>
+{{channel}}
+</a>
+</li>
+<li class='roomlabel'>
+<a class='btn btn-default' href='' ng-click='showCreate = !showCreate'>
+<i class='fa fa-magic'></i>
+Create new...
+</a>
+</li>
+<div ng-show='showCreate'>
+<form ng-submit='createChannel()'>
+<h6>Create New Room</h6>
+<div class='input-group'>
+<input class='input-sm form-control' ng-model='newChannel' placeholder='Room Name' type='text'>
+<span class='input-group-btn'>
+<input class='input-sm btn btn-default' type='submit' value='Go!'>
+</span>
+</div>
+<br>
+<br>
+</form>
+</div>
+</ul>
+</div>
+<div class='row'>
+<div class='col-md-2'>
+<small class='marker'>Online Users</small>
+<ul class='list-unstyled'>
+<li ng-repeat='user in users'>
+<span class='label btn-mini userlabel' ng-class="{'label-default': user != data.username, 'label-info': (user == data.username)}">
+<i class='fa fa-user'></i>
+{{user}}
+</span>
+</li>
+</ul>
+</div>
+<div class='col-md-10'>
+<small class='marker'>Chat History</small>
+<form ng-submit='publish()'>
+<div class='input-group'>
+<input class='input-sm form-control' ng-model='newMessage' type='text'>
+<span class='input-group-btn'>
+<input class='input-sm btn btn-default' type='submit' value='Send'>
+</span>
+</div>
+</form>
+<div class='well chatbox' id='chat_history'>
+<ul class='list-unstyled'>
+<li ng-repeat='message in messages'>
+<i class='fa fa-comment'></i>
+&nbsp;
+{{message}}
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+<div ng-include src="'views/_content.html'"></div>
+<div ng-include src="'views/_footer.html'"></div>
