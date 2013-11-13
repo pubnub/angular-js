@@ -1,28 +1,24 @@
-.container.col-md-12(ng-include=true src="'views/_nav.html'")
+.container
+  .col-md-12(ng-include=true src="'views/_nav.html'")
 
 .container
-  .col-md-8(ng-include=true src="'views/_happy.html'")
-  .col-md-4
-    .panel.panel-default
-      .panel-heading
-        %h3.panel-title
-          %i.fa.fa-info-circle
-          For More Information
-
-      .panel-body
-        %ul
-          %li.fa.fa-share
-            %a(href='https://github.com/pubnub/javascript') PubNub JavaScript API
-          %li.fa.fa-share
-            %a(href='http://angularjs.org') AngularJS Home
+  .col-md-12(ng-include=true src="'views/_happy.html'")
 
 .container
-  %section.chat-section
+  %section.chat-section#chat_application
     .container
-      %h2 PubNub AngularJS Chat Example
+      %h2
+        PubNub AngularJS Chat Example
+        
+      %p
+        %span.label.label-success(ng-show='selectedChannel') And... We're Live!
+        Channels are listed across the screen. To send a chat message,
+        enter a message in the box and click the 'Send' button.
+        
+
       .dialog.dialog-success
         %h6
-          Welcome {{data.username}}, please choose a channel below (
+          Welcome {{data.username}}, click to select a channel below (
           %a(ng-href="#/join") sign out
           \)
         %ul.list-unstyled.list-inline

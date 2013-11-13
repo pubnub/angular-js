@@ -2,15 +2,24 @@
 
 angular.module('pubnub.angular.service', [])
   .factory 'PubNub', ($rootScope) ->
+    # initialize an instance object
     c = {
       '_instance' : null
       '_channels' : []
       '_presence' : {}
+      'jsapi'       : {}
     }
 
-    for k in ['subscribe','unsubscribe','publish','history','here_now','replay','map', 'each']
+    # helper methods
+    for k in ['map', 'each']
       if PUBNUB?[k] instanceof Function
         ((kk) -> c[kk] = ->
+          c['_instance']?[kk].apply c['_instance'], arguments)(k)
+
+    # core (original) PubNub API methods
+    for k of PUBNUB
+      if PUBNUB?[k] instanceof Function
+        ((kk) -> c['jsapi'][kk] = ->
           c['_instance']?[kk].apply c['_instance'], arguments)(k)
 
     c.initialized = -> !!c['_instance']
@@ -25,7 +34,7 @@ angular.module('pubnub.angular.service', [])
       c['_instance'] = null
       c['_channels'] = null
       c['_presence'] = null
-      # TODO - possible to destroy PUBNUB instance?
+      # TODO - destroy PUBNUB instance & reset memory
 
     c._ngFireMessages = (realChannel) ->
       (messages, t1, t2) ->
@@ -81,7 +90,7 @@ angular.module('pubnub.angular.service', [])
       c['_channels'].push args.channel if c['_channels'].indexOf(args.channel) < 0
       c['_presence'][args.channel] ||= []
       args = c._ngInstallHandlers args
-      c.subscribe(args)
+      c.jsapi.subscribe(args)
 
     c.ngUnsubscribe = (args) ->
       cpos = c['_channels'].indexOf(args.channel)
@@ -89,20 +98,20 @@ angular.module('pubnub.angular.service', [])
       c['_presence'][args.channel] = null
       delete $rootScope.$$listeners[c.ngMsgEv(args.channel)]
       delete $rootScope.$$listeners[c.ngPrsEv(args.channel)]
-      c.unsubscribe(args)
+      c.jsapi.unsubscribe(args)
 
     c.ngPublish = -> c['_instance']['publish'].apply c['_instance'], arguments
 
     c.ngHistory = (args) ->
       args.callback = c._ngFireMessages args.channel
-      c.history args
+      c.jsapi.history args
 
     c.ngHereNow = (args) ->
       args = c._ngInstallHandlers(args)
       args.callback = args.presence
       delete args.presence
       delete args.message
-      c.here_now(args)
+      c.jsapi.here_now(args)
 
     c.ngMsgEv = (channel) -> "pn-message:#{channel}"
     c.ngPrsEv = (channel) -> "pn-presence:#{channel}"

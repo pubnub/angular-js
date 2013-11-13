@@ -12,7 +12,7 @@ synchronization - Angular.js takes care of the event handling and DOM
 updates, and leverages PubNub's global network to provide scalable
 message delivery.
 
-In this *updated* version, the Angular.js PubNub library provides access to
+In the latest version, the Angular.js PubNub library provides access to
 a 'PubNub' object within Angular controllers, avoiding access via a global
 variable for access to the PubNub core JavaScript API. In addition, this
 extension provides developers with special Angular-specific capabilities such
@@ -36,7 +36,8 @@ Multi-channel operation is extremely efficient thanks to multiplexing support
 in the PubNub client library. This means that the client library doesn't have
 to open 7 TCP connections so it can participate in 7 broadcast channels - the
 server and client library takes care of combining and separating messages on
-a single channel. This is especially useful for power-conservation on mobile devices.
+a single channel. This is especially useful for power-conservation on mobile
+devices.
 
 You can check out the sample application online at http://pubnub.github.io/angular-js/
 
@@ -121,7 +122,8 @@ $scope.publish = function() {
 
 Here, we call the PubNub publish method passing in the selected channel
 and the message to transmit. It is also possible to transmit structured
-data as JSON objects.
+data as JSON objects which will be automatically serialized & deserialized
+by the PubNub library.
 
 Subscribing to channels is accomplished by calling the PubNub ngSubscribe method.
 After the channel is subscribed, the app can register root scope message events
@@ -159,14 +161,18 @@ returned by PubNub.ngPrsEv(channel).
 ```javascript
 $scope.subscribe = function() {
   ...
+  // subscribe to the channel
   PubNub.ngSubscribe({ channel: theChannel })
+  // handle message events
   $rootScope.$on(PubNub.ngMsgEv(theChannel), function(event, payload) { ... })
   ...
+  // handle presence events
   $rootScope.$on(PubNub.ngPrsEv(theChannel), function(event, payload) {
     // payload contains message, channel, env...
     console.log('got a presence event:', payload);
   })
 
+  // obtain the list of current channel subscribers
   PubNub.ngHereNow { channel: theChannel }
 ```
 
@@ -213,7 +219,9 @@ prevent memory leaks!
 ```
 
 
+# API Recap
 
+The PubNub Angular API provides these:
 
 
 

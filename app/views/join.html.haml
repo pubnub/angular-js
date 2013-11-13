@@ -1,29 +1,17 @@
+
 .container.col-md-12(ng-include=true src="'views/_nav.html'")
 
-.container
-  .col-md-8(ng-include=true src="'views/_happy.html'")
-  .col-md-4
-    .panel.panel-default.panel-primary
-      .panel-heading
-        %h3.panel-title Join Chat
-
-      .panel-body
-
-        %ul.list-unstyled
-          %li
-            %label
-              Username
-          %li
-            %input.input-lg.form-control(type="text" ng-model='data.username' size="20" maxlength="20")
-
-        %ul.list-unstyled
-          %li
-            %input.btn.btn-block.btn-primary(type="submit" value="Join" ng-click="join()")
+.container.col-md-12(ng-include=true src="'views/_happy.html'")
 
 .container
   %section.chat-section
     .container
-      %h2 PubNub AngularJS Chat Example
+      %h2
+        PubNub AngularJS Chat Example
+        
+      %p
+        %span.label.label-default(ng-hide='selectedChannel') Not Connected Yet
+        To enter the sample Chat application, choose a username and press the "Join" button above
       
       %img.img-rounded(src='images/screenshot.png' style="width:600px")
 

@@ -1,21 +1,72 @@
-.well
-  %p
-    %span(style='font-size:72px')
-      %img(src='images/icons/shield.svg' style="height:96px")
-      %img(src='images/icons/map.svg' style="height:96px")
-      %img(src='images/icons/girl.svg' style="height:96px")
-      %img(src='images/icons/chat.svg' style="height:96px")
-      %img(src='images/icons/dude.svg' style="height:96px")
-  %p
-    %h4.marker
-      More AngularJS. More PubNub. More Fun.
-  %p
-    We hope you'll enjoy this friendly and useful sample
-    application that weighs in at around 70 lines of coffeescript.
-  %p(ng-hide='selectedChannel')
-    To begin, please enter a username (or accept the random
-    selection) and click Join to enter the chat area.
-  %p(ng-show='selectedChannel')
-    %span.label.label-success Ready, Set, Go!
-    Channels are listed across the screen. To send a chat message,
-    enter a message in the box and click the 'Send' button.
+.col-md-12
+  .row
+    .col-md-8.well
+      %table
+        %tr
+          %td
+            %img(src='images/icons/shield.svg' style="height:96px")
+            %br
+            %br
+            %img(src='images/icons/girl.svg' style="height:96px")
+          %td
+            %img(src='http://www.pubnub.com/images/home/image_04.png')
+          %td
+            %img(src='images/icons/chat.svg' style="height:96px")
+            %br
+            %br
+            %img(src='images/icons/dude.svg' style="height:96px")
+
+      %h4
+        More AngularJS. More PubNub. More Fun.
+      %p
+        There's a new AngularJS PubNub API in town, optimized to make
+        building real-time web applications as easy as possible.
+      %p
+        We hope you'll enjoy this friendly and useful sample
+        application that weighs in at around 70 lines of coffeescript.
+      %p(ng-hide='selectedChannel')
+        To begin, please enter a username (or accept the random
+        selection) and click Join to enter the chat area.
+
+    .col-md-4
+      .panel.panel-default
+        .panel-heading
+          %h3.panel-title
+            %i.fa.fa-info-circle
+            Exploring AngularJS and PubNub
+
+        .panel-body
+          %ul
+            %li
+              %a(href="" onclick="scrl2('#chat_application')") The AngularJS Chat Application
+            %li
+              %a(href="" onclick="scrl2('#getting_started')") Getting Started
+            %li
+              %a(href="" onclick="scrl2('#angular_api_tour')") PubNub Angular API Tour
+            %li
+              %a(href="" onclick="scrl2('#angular_api_reference')") API Reference
+            %li
+              %a(href='https://github.com/pubnub/javascript')
+                %i.fa.fa-share
+                PubNub JavaScript API
+            %li
+              %a(href='http://angularjs.org')
+                %i.fa.fa-share
+                AngularJS Home
+
+      .panel.panel-default.panel-primary(ng-hide='selectedChannel')
+        .panel-heading
+          %h3.panel-title Join Chat
+
+        .panel-body
+
+          %ul.list-unstyled
+            %li
+              %label
+                Username
+            %li
+              %input.input-lg.form-control(type="text" ng-model='data.username' size="20" maxlength="20")
+
+          %ul.list-unstyled
+            %li
+              %input.btn.btn-block.btn-primary(type="submit" value="Join" ng-click="join()")
