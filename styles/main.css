@@ -1,3 +1,11 @@
+@media (max-width: 767px)
+{
+    body {
+        padding-right: 0px;
+        padding-left: 0px;
+    }
+}
+
 .chatbox {
   font-family:Lato;
   width:100%;
@@ -18,4 +26,12 @@
 
 #getting_started {
   background-color:;
+}
+
+.brandP {
+  padding-top:20px;
+}
+
+.padding-20 {
+  padding:20px;
 }
