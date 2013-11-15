@@ -70,7 +70,7 @@ The HTML page includes 3 key libraries:
 The HTML code looks like this:
 
 ```html
-<script src="http://cdn.pubnub.com/pubnub-3.5.3.js"></script>
+<script src="http://cdn.pubnub.com/pubnub.min.js"></script>
 <script src="components/angular/angular.js"></script>
 <script src="scripts/pubnub-angular.js"></script>
 ```
