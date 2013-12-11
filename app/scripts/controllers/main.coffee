@@ -11,13 +11,36 @@ angular.module('PubNubAngularApp')
     $scope.join = ->
       $rootScope.data ||= {}
       $rootScope.data.username = $scope.data?.username
+      $rootScope.data.super    = $scope.data?.super
+
+      #
+      # NOTE! We include the secret & auth keys here only for demo purposes!
+      #
+      # In a real app, the secret key should be protected by server-only access, and
+      # different/separate auth keys should be distributed by the server and used
+      # for user authentication.
+      #
+      $rootScope.secretKey = if $scope.data.super then 'sec-c-ZTMxNWNmMjQtYmZhNC00YWVlLWI1MjMtODEzZWQ0M2UwZjQx' else null
+      $rootScope.authKey   = if $scope.data.super then 'ChooseABetterSecret' else null
 
       PubNub.init({
-        subscribe_key : 'demo'
-        publish_key   : 'demo'
+        subscribe_key : 'sub-c-340a3e8a-6211-11e3-938a-02ee2ddab7fe'
+        publish_key   : 'pub-c-2e22d352-c3ee-4056-b31c-915599024941'
+        # WARNING: DEMO purposes only, never provide secret key in a real web application!
+        secret_key    : $rootScope.secretKey
+        auth_key      : $rootScope.authKey
         uuid          : Math.floor(Math.random() * 1000000) + '__' + $scope.data.username
+        ssl           : true
       })
       
+      if $scope.data.super
+        ### Grant access to the SuperHeroes room for supers only! ###
+        PubNub.ngGrant({channel:'SuperHeroes',auth_key:$rootScope.authKey,read:true,write:true,callback:->console.log('SuperHeroes! all set', arguments)})
+        PubNub.ngGrant({channel:"SuperHeroes-pnpres",auth_key:$rootScope.authKey,read:true,write:true,callback:->console.log('SuperHeroes! presence all set', arguments)})
+        # Let everyone see the control channel so they can retrieve the rooms list
+        PubNub.ngGrant({channel:'__controlchannel',read:true,write:true,callback:->console.log('control channel all set', arguments)})
+        PubNub.ngGrant({channel:'__controlchannel-pnpres',read:true,write:true,callback:->console.log('control channel presence all set', arguments)})
+
       $location.path '/chat'
       
     $(".prettyprint")
@@ -32,21 +55,26 @@ angular.module('PubNubAngularApp')
     $location.path '/join' unless PubNub.initialized()
     
     ### Use a "control channel" to collect channel creation messages ###
-    $scope.controlChannel = '$control$channel'
+    $scope.controlChannel = '__controlchannel'
     $scope.channels = []
 
     ### Publish a chat message ###
-    $scope.publish = () ->
+    $scope.publish = ->
       console.log 'publish', $scope
+      return unless $scope.selectedChannel
       PubNub.ngPublish { channel: $scope.selectedChannel, message: {text:$scope.newMessage, user:$scope.data.username} }
       $scope.newMessage = ''
 
     ### Create a new channel ###
-    $scope.createChannel = () ->
+    $scope.createChannel = ->
       console.log 'createChannel', $scope
-      return unless $scope.newChannel
+      return unless $scope.data.super && $scope.newChannel
       channel = $scope.newChannel
       $scope.newChannel = ''
+
+      # grant anonymous access to channel and presence
+      PubNub.ngGrant({channel:channel,read:true,write:true,callback:->console.log("#{channel} all set", arguments)})
+      PubNub.ngGrant({channel:"#{channel}-pnpres",read:true,write:true,callback:->console.log("#{channel} presence all set", arguments)})
 
       # publish the channel creation message to the control channel
       PubNub.ngPublish { channel: $scope.controlChannel, message: channel }
@@ -67,7 +95,7 @@ angular.module('PubNubAngularApp')
       $scope.selectedChannel = channel
       $scope.messages = ['Welcome to ' + channel]
 
-      PubNub.ngSubscribe { channel: $scope.selectedChannel }
+      PubNub.ngSubscribe { channel: $scope.selectedChannel, auth_key: $scope.authKey }
 
       $rootScope.$on PubNub.ngPrsEv($scope.selectedChannel), (ngEvent, payload) ->
         $scope.$apply ->
@@ -79,6 +107,7 @@ angular.module('PubNubAngularApp')
         msg = if payload.message.user then "[#{payload.message.user}] #{payload.message.text}" else "[unknown] #{payload.message}"
         $scope.$apply -> $scope.messages.unshift msg
 
+      # in this app, only supers can see history
       PubNub.ngHistory { channel: $scope.selectedChannel, count:500 }
 
 
@@ -90,8 +119,11 @@ angular.module('PubNubAngularApp')
       $scope.$apply -> $scope.channels.push payload.message if $scope.channels.indexOf(payload.message) < 0
 
     ### Get a reasonable historical backlog of messages to populate the channels list ###
-    PubNub.ngHistory   { channel: $scope.controlChannel, count:500 }
+    PubNub.ngHistory { channel: $scope.controlChannel, count:500 }
 
-    ### and finally, enter the 'WaitingRoom' channel ###
-    $scope.newChannel = 'WaitingRoom'
-    $scope.createChannel()
+    ### and finally, create and/or enter the 'WaitingRoom' channel ###
+    if $scope.data?.super
+      $scope.newChannel = 'WaitingRoom'
+      $scope.createChannel()
+    else
+      $scope.subscribe 'WaitingRoom'

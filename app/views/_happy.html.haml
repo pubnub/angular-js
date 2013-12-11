@@ -9,7 +9,7 @@
             %br
             %img(src='images/icons/girl.svg' style="height:96px")
           %td
-            %img(src='http://www.pubnub.com/images/home/image_04.png')
+            %img(src='images/image_04.png')
           %td
             %img(src='images/icons/chat.svg' style="height:96px")
             %br
@@ -58,7 +58,7 @@
         .panel-heading
           %h3.panel-title Join Chat
 
-        .panel-body
+        %form.panel-body
 
           %ul.list-unstyled
             %li
@@ -66,6 +66,12 @@
                 Username
             %li
               %input.input-lg.form-control(type="text" ng-model='data.username' size="20" maxlength="20")
+
+          %ul.list-unstyled
+            %li
+              %label
+                %input.checkbox-inline.input-lg(type="checkbox" ng-model='data.super')
+                Log in with super powers?
 
           %ul.list-unstyled
             %li

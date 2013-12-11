@@ -116,5 +116,8 @@ angular.module('pubnub.angular.service', [])
     c.ngMsgEv = (channel) -> "pn-message:#{channel}"
     c.ngPrsEv = (channel) -> "pn-presence:#{channel}"
 
+    c.ngAudit = -> c['_instance']['audit'].apply c['_instance'], arguments
+    c.ngGrant = -> c['_instance']['grant'].apply c['_instance'], arguments
+
     c
 
