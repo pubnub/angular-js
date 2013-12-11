@@ -20,12 +20,12 @@ angular.module('PubNubAngularApp')
       # different/separate auth keys should be distributed by the server and used
       # for user authentication.
       #
-      $rootScope.secretKey = if $scope.data.super then 'sec-c-ZTMxNWNmMjQtYmZhNC00YWVlLWI1MjMtODEzZWQ0M2UwZjQx' else null
+      $rootScope.secretKey = if $scope.data.super then 'sec-c-MmIzMDAzNDMtODgxZC00YzM3LTk1NTQtMzc4NWQ1NmZhYjIy' else null
       $rootScope.authKey   = if $scope.data.super then 'ChooseABetterSecret' else null
 
       PubNub.init({
-        subscribe_key : 'sub-c-340a3e8a-6211-11e3-938a-02ee2ddab7fe'
-        publish_key   : 'pub-c-2e22d352-c3ee-4056-b31c-915599024941'
+        subscribe_key : 'sub-c-d66562f0-62b0-11e3-b12d-02ee2ddab7fe'
+        publish_key   : 'pub-c-e2b65946-31f0-4941-a1b8-45bab0032dd8'
         # WARNING: DEMO purposes only, never provide secret key in a real web application!
         secret_key    : $rootScope.secretKey
         auth_key      : $rootScope.authKey
@@ -95,8 +95,7 @@ angular.module('PubNubAngularApp')
       $scope.selectedChannel = channel
       $scope.messages = ['Welcome to ' + channel]
 
-      PubNub.ngSubscribe { channel: $scope.selectedChannel, auth_key: $scope.authKey }
-
+      PubNub.ngSubscribe { channel: $scope.selectedChannel, auth_key: $scope.authKey, error: -> console.log arguments }
       $rootScope.$on PubNub.ngPrsEv($scope.selectedChannel), (ngEvent, payload) ->
         $scope.$apply ->
           $scope.users = PubNub.map PubNub.ngListPresence($scope.selectedChannel), (x) -> x.replace(/\w+__/, "")
@@ -107,9 +106,7 @@ angular.module('PubNubAngularApp')
         msg = if payload.message.user then "[#{payload.message.user}] #{payload.message.text}" else "[unknown] #{payload.message}"
         $scope.$apply -> $scope.messages.unshift msg
 
-      # in this app, only supers can see history
-      PubNub.ngHistory { channel: $scope.selectedChannel, count:500 }
-
+      PubNub.ngHistory { channel: $scope.selectedChannel, auth_key: $scope.data.authKey, count:500 }
 
     ### When controller initializes, subscribe to retrieve channels from "control channel" ###
     PubNub.ngSubscribe { channel: $scope.controlChannel }
