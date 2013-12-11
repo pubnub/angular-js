@@ -175,6 +175,32 @@
           :escaped
             PubNub.ngUnsubscribe({channel:theChannel})
 
+        %h4 Restricting Access (Advanced)
+
+        %p
+          Often times, it's desirable to lock down applications and channels.
+          With PAM (PubNub Access Manager), it's easy. There are 2 calls:
+          <code>grant</code> which grants access for users having a specified
+          auth key, and <code>audit</code> which returns the current policy
+          configuration.
+
+        %p
+          Note: to perform access control operations, the PubNub client must
+          be initialized with the secret key (which should always be protected
+          by server-only access).
+
+        %pre.well
+          :escaped
+            PubNub.ngGrant({channel:theChannel,auth_key:'readers_must_have_this_secret',read:true,write:false,callback:function(){...}});
+            # now clients providing the auth key can read...
+
+            PubNub.ngAudit({channel:theChannel,auth_key:'readers_must_have_this_secret',callback:function(policy){...}});
+            # calls back with the policy description as a JSON object...
+
+        %p
+          If this is interesting to you, see http://www.pubnub.com/docs/javascript/overview/security.html
+          for more details!
+
       %hr
       %section#angular_api_reference
         %h2 PubNub Angular API Reference
@@ -188,6 +214,9 @@
           %li <code>PubNub.ngPublish({channel:aChannel,message:aMessage})</code>: publish a message to the specified channel
           %li <code>PubNub.ngHistory({channel:aChannel})</code>: calls PUBNUB.history with the specified channel to produce root scope message broadcast events (make sure the code is subscribed to the channel and channel message events)
           %li <code>PubNub.ngHereNow({channel:aChannel})</code>: calls PUBNUB.here_now with the specified channel to produce root scope presence broadcast events (make sure the code is subscribed to the channel and channel presence events)
+          %li <code>PubNub.ngAudit()</code>: displays PAM (PubNub Access Manager) settings, see http://www.pubnub.com/docs/javascript/api/reference.html#access
+          %li <code>PubNub.ngGrant()</code>: grants acccess via PAM (PubNub Access Manager), see http://www.pubnub.com/docs/javascript/api/reference.html#grant
+          %li <code>PubNub.ngListPresence(channel)</code>: returns the list of subscribers for a channel
           %li <code>PubNub.ngListChannels()</code>: returns the list of channels that the PubNub Angular API is connected to
           %li <code>PubNub.ngListPresence(channel)</code>: returns the list of subscribers for a channel
           %li <code>PubNub.ngMsgEv(channel)</code>: returns the root scope broadcast event name for message events for a given channel
