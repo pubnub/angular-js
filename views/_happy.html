@@ -10,7 +10,7 @@
 <img src='images/icons/girl.svg' style='height:96px'>
 </td>
 <td>
-<img src='http://www.pubnub.com/images/home/image_04.png'>
+<img src='images/image_04.png'>
 </td>
 <td>
 <img src='images/icons/chat.svg' style='height:96px'>
@@ -77,7 +77,7 @@ AngularJS Home
 <div class='panel-heading'>
 <h3 class='panel-title'>Join Chat</h3>
 </div>
-<div class='panel-body'>
+<form class='panel-body'>
 <ul class='list-unstyled'>
 <li>
 <label>
@@ -90,10 +90,18 @@ Username
 </ul>
 <ul class='list-unstyled'>
 <li>
+<label>
+<input class='checkbox-inline input-lg' ng-model='data.super' type='checkbox'>
+Log in with super powers?
+</label>
+</li>
+</ul>
+<ul class='list-unstyled'>
+<li>
 <input class='btn btn-block btn-primary' ng-click='join()' type='submit' value='Join'>
 </li>
 </ul>
-</div>
+</form>
 </div>
 </div>
 </div>
