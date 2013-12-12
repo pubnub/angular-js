@@ -40,7 +40,7 @@
           channel: "SuperHeroes-pnpres",
           auth_key: $rootScope.authKey,
           read: true,
-          write: true,
+          write: false,
           callback: function() {
             return console.log('SuperHeroes! presence all set', arguments);
           }
@@ -56,7 +56,7 @@
         PubNub.ngGrant({
           channel: '__controlchannel-pnpres',
           read: true,
-          write: true,
+          write: false,
           callback: function() {
             return console.log('control channel presence all set', arguments);
           }
@@ -119,7 +119,7 @@
       PubNub.ngGrant({
         channel: "" + channel + "-pnpres",
         read: true,
-        write: true,
+        write: false,
         callback: function() {
           return console.log("" + channel + " presence all set", arguments);
         }
