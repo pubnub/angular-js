@@ -36,10 +36,10 @@ angular.module('PubNubAngularApp')
       if $scope.data.super
         ### Grant access to the SuperHeroes room for supers only! ###
         PubNub.ngGrant({channel:'SuperHeroes',auth_key:$rootScope.authKey,read:true,write:true,callback:->console.log('SuperHeroes! all set', arguments)})
-        PubNub.ngGrant({channel:"SuperHeroes-pnpres",auth_key:$rootScope.authKey,read:true,write:true,callback:->console.log('SuperHeroes! presence all set', arguments)})
+        PubNub.ngGrant({channel:"SuperHeroes-pnpres",auth_key:$rootScope.authKey,read:true,write:false,callback:->console.log('SuperHeroes! presence all set', arguments)})
         # Let everyone see the control channel so they can retrieve the rooms list
         PubNub.ngGrant({channel:'__controlchannel',read:true,write:true,callback:->console.log('control channel all set', arguments)})
-        PubNub.ngGrant({channel:'__controlchannel-pnpres',read:true,write:true,callback:->console.log('control channel presence all set', arguments)})
+        PubNub.ngGrant({channel:'__controlchannel-pnpres',read:true,write:false,callback:->console.log('control channel presence all set', arguments)})
 
       $location.path '/chat'
       
@@ -74,7 +74,7 @@ angular.module('PubNubAngularApp')
 
       # grant anonymous access to channel and presence
       PubNub.ngGrant({channel:channel,read:true,write:true,callback:->console.log("#{channel} all set", arguments)})
-      PubNub.ngGrant({channel:"#{channel}-pnpres",read:true,write:true,callback:->console.log("#{channel} presence all set", arguments)})
+      PubNub.ngGrant({channel:"#{channel}-pnpres",read:true,write:false,callback:->console.log("#{channel} presence all set", arguments)})
 
       # publish the channel creation message to the control channel
       PubNub.ngPublish { channel: $scope.controlChannel, message: channel }
