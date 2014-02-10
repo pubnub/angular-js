@@ -106,7 +106,7 @@ angular.module('PubNubAngularApp')
         msg = if payload.message.user then "[#{payload.message.user}] #{payload.message.text}" else "[unknown] #{payload.message}"
         $scope.$apply -> $scope.messages.unshift msg
 
-      PubNub.ngHistory { channel: $scope.selectedChannel, auth_key: $scope.data.authKey, count:500 }
+      PubNub.ngHistory { channel: $scope.selectedChannel, auth_key: $scope.authKey, count:500 }
 
     ### When controller initializes, subscribe to retrieve channels from "control channel" ###
     PubNub.ngSubscribe { channel: $scope.controlChannel }
