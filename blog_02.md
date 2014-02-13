@@ -20,16 +20,15 @@ such as PubNub-enabled Angular directives and integration with the AngularJS pro
 framework. So stay tuned and let us know here [PubNub AngularJS on GitHub](https://github.com/pubnub/angular-js/issues) if you have any ideas for future enhancements!
 
 The PubNub AngularJS library should look familiar to experienced
-developers in Angular development as well as to folks who have explored
+developers in Angular app development as well as to folks who have explored
 the PubNub API a bit. For this blog entry, we'll presume you are somewhat
-familiar with the ideas from [the first blog entry|http://www.pubnub.com/blog/real-time-angularjs-sdk-for-developers/],
+familiar with the ideas from [an earliear PubNub AngularJS SDK Blog](http://www.pubnub.com/blog/real-time-angularjs-sdk-for-developers/),
 at least enough to get started. If you like what you see here, you can jump
 right into a live version of the app at http://pubnub.github.io/angular-js/#/chat
 or the source code at https://github.com/pubnub/angular-js/ .
 
 Let's take a look at the contents of http://pubnub.github.io/angular-js/index.html ,
 the main entry point for the application.
-
 
 # Quick Recap: Setting Up
 
