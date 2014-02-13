@@ -62,7 +62,7 @@ Once that's set, the PubNub service can be injected into the controller by name!
 
 # Quick Recap: Publish & Subscribe
 
-Publishing to channels is trivial - just use the PubNub.ngPublish() method.
+Publishing to channels is trivial - just use the `PubNub.ngPublish()` method.
 
     $scope.publish = function() {
       PubNub.ngPublish({
@@ -71,9 +71,9 @@ Publishing to channels is trivial - just use the PubNub.ngPublish() method.
       });
     };
 
-Subscribing to channels is accomplished by calling the PubNub.ngSubscribe() method. After the
-channel is subscribed, the app can register root scope message events by calling $rootScope.$on
-with the "event name" string returned by PubNub.ngMsgEv(channel).
+Subscribing to channels is accomplished by calling the `PubNub.ngSubscribe()` method. After the
+channel is subscribed, the app can register root scope message events by calling `$rootScope.$on`
+with the "event name" string returned by `PubNub.ngMsgEv(channel)`.
 
     $scope.subscribe = function() {
       ...
@@ -91,12 +91,13 @@ with the "event name" string returned by PubNub.ngMsgEv(channel).
 The PubNub Presence API makes it very easy to build presence-aware applications -- without
 the Presence API, you'd have to track all of the join/leave/timeout events yourself on the
 server side. Which is really tough if you're building a pure JS web application with no
-server side!
+server side!  Presence fixes that.
 
 To keep things simple, wiring up Presence events using the PubNub AngularJS API is very
 similar to wiring up Message events. It all boils down to registering an event handler
 callback for the presence events:
 
+```javascript
   PubNub.ngSubscribe({ channel: theChannel });
   ...
   $rootScope.$on(PubNub.ngPrsEv(theChannel), function(event, payload) {
@@ -105,42 +106,46 @@ callback for the presence events:
   });
   ...
   PubNub.ngHereNow({ channel: theChannel });
+```
 
-In this case, PubNub.ngPrsEv(theChannel) returns the "event name" string that identifies
+In this case, PubNub.ngPrsEv(theChannel)` returns the "event name" string that identifies
 presence events for the specified channel.
 
 The presence event payload contains a bunch of useful information for
 your app: the channel and PubNub event itself. In the case of a single-user event (which you
-can tell by the presence of the 'uuid' field, 'payload.event' contains action (join/leave/timeout),
+can tell by the presence of the 'uuid' field, `payload.event` contains action (join/leave/timeout),
 occupancy (number of users in the channel), timestamp, and uuid of the relevant user.
 
-In the case of a multi-user event (such as the one triggered by ngHereNow()), the
-'payload.event' contains the occupancy count as well as a 'uuids' field (note pluralization)
+In the case of a multi-user event (such as the one triggered by `ngHereNow()`), the
+`payload.event` contains the occupancy count as well as a 'uuids' field (note pluralization)
 which contains the list of current user ids.
 
 In addition to the callback-based API, there is also a convenient collection-based API
 that keeps track of channel membership automatically. To obtain the list of users, just call
-the ngListPresence() function with the name of the channel you'd like to list. Of course,
+the `ngListPresence()` function with the name of the channel you'd like to list. Of course,
 you'll want to already be subscribed to the channel and initialized the 'here now' status
 as in the example below.
 
+```javascript
   PubNub.ngSubscribe({ channel: theChannel });
   PubNub.ngHereNow({ channel: theChannel });
   ...
   allTheUsers = PubNub.ngListPresence(theChannel);
+```
 
 Often times, we combine both approaches to make sure that our Angular views always have
 the most up-to-date user list:
 
+```javascript
   PubNub.ngSubscribe({ channel: theChannel });
   PubNub.ngHereNow({ channel: theChannel });
   ...
   $rootScope.$on(PubNub.ngPrsEv(theChannel), function(event, payload) {
     $scope.userList = PubNub.ngListPresence(theChannel);
   });
+```
 
 And just like that, your app is wired for presence!
-
 
 # Using the History Functions to Backfill Messages
 
