@@ -155,9 +155,10 @@ out is the History API, which allows applications to retrieve previous messages 
 PubNub channel storage and fire them as application message events.
 
 The history API will require a channel subscription and message event handler as
-shown below. Once that's set up, simply call the ngHistory() function with the number
+shown below. Once that's set up, simply call the `ngHistory()` function with the number
 of messages to retrieve.
 
+```javascript
   PubNub.ngSubscribe({ channel: theChannel });
   ...
   $rootScope.$on(PubNub.ngMsgEv(theChannel), function(event, payload) {
@@ -166,15 +167,15 @@ of messages to retrieve.
   });
   ...
   PubNub.ngHistory({ channel: theChannel, count: 500 });
-      
-When the ngHistory call executes, the library will cause AngularJS message events
+```
+
+When the `ngHistory()` call executes, the library will cause AngularJS message events
 to be broadcast on the root scope to all registered listeners.
 
-Check out the [PubNub Javascript API|https://github.com/pubnub/javascript] for a
+Check out the [PubNub Javascript SDK](http://www.pubnub.com/docs/javascript/javascript-sdk.html) for a
 more detailed description of the History API v2 features. In addition to the 'count'
 parameter above, it is also possible to do forward and reverse timeline-based
 iteration! Look up the 'start', 'end' and 'reverse' parameters for details.
-
 
 # Wrapping Up
 
@@ -184,14 +185,13 @@ to be useful -- it is really cool to see the number of PubNub and AngularJS
 applications growing over the past few weeks!
 
 The PubNub API has many more features we didn't cover in this blog
-post, but which are explained in detail in the API Guide and Reference
-here http://pubnub.github.io/angular-js/index.html . The documentation
+post, but which are explained in detail in the [GitHub API Guide and Reference](http://pubnub.github.io/angular-js/index.html). The documentation
 walks you through additional topics which really enhance your real-time-enabled
 web application.
 
 In future blog posts, we'll cover other features of the PubNub Angular API.
 In the meantime, please give the AngularJS integration a try, have fun,
-and reach out if you have ideas (https://github.com/pubnub/angular-js/issues)
-or need a hand (mailto:help@pubnub.com)!
+and reach out if you have ideas visit [GitHub pubnub/angular-js](https://github.com/pubnub/angular-js/issues).
+Or, do you need a hand [(help@pubnub.com)](mailto:help@pubnub.com)!
 
 
