@@ -32,13 +32,11 @@ the main entry point for the application.
 
 # Quick Recap: Setting Up
 
-For more details on app setup, please check out the [previous blog entry|http://www.pubnub.com/blog/real-time-angularjs-sdk-for-developers/].
-
 Here are the script includes you'll need to get started:
 
     <script src="http://cdn.pubnub.com/pubnub.min.js"></script>
-    <script src="components/angular/angular.js"></script>
-    <script src="scripts/pubnub-angular.js"></script>
+    <script src="http://pubnub.github.io/angular-js/components/angular/angular.js"></script>
+    <script src="http://pubnub.github.io/angular-js/scripts/pubnub-angular.js"></script>
 
 The web app is Angular-enabled with an ng-app attribute:
 
@@ -46,7 +44,7 @@ The web app is Angular-enabled with an ng-app attribute:
 
 The code for our app lives in:
 
-    <script src="scripts/app.js"></script>
+    <script src="http://pubnub.github.io/angular-js/scripts/app.js"></script>
 
 The app requires a dependency on the PubNub Angular library
 (pubnub.angular.service, defined in pubnub-angular.js):
@@ -55,7 +53,7 @@ The app requires a dependency on the PubNub Angular library
 
 The code for our controllers lives in:
 
-    <script src="scripts/controllers/main.js"></script>
+    <script src="http://pubnub.github.io/angular-js/scripts/controllers/main.js"></script>
 
 Once that's set, the PubNub service can be injected into the controller by name!
 
