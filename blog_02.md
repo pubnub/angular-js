@@ -1,8 +1,7 @@
-
 # Next Steps: Presence & Message History with the PubNub AngularJS Library
 
-A couple weeks ago, we posted our [first blog entry|http://www.pubnub.com/blog/real-time-angularjs-sdk-for-developers/]
-on using PubNub with AngularJS, a fast-growing and highly productive library
+A couple weeks ago, we posted our [using PubNub with AngularJS SDK for Real-time](http://www.pubnub.com/blog/real-time-angularjs-sdk-for-developers/)
+which is a fast-growing and highly productive library
 for web application development in JavaScript. Since then, there has been no
 slowing down in the adoption or development of AngularJS or PubNub: AngularJS
 recently released 1.2.10, and PubNub is up to version 3.5.48.
