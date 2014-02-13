@@ -10,15 +10,14 @@ As we've been building a bunch of PubNub-enabled AngularJS applications,
 a number of useful patterns and techniques for AngularJS developers have
 popped up, for example:
 
-* an Angular service to inject the PubNub object into controllers
+* an Angular service to inject the data sync PubNub connector into controllers
 * an Angular-friendly mechanism for binding events to the root scope
 * additional bookkeeping functions for providing easy access to collections (such as the presence and channels lists)
 
 We're continuously updating this library - for example, updated presence API
 support will be coming soon. We're also actively exploring more features in this library,
 such as PubNub-enabled Angular directives and integration with the AngularJS promise
-framework, so stay tuned and let us know here (https://github.com/pubnub/angular-js/issues)
-if you have any ideas for future enhancements!
+framework. So stay tuned and let us know here [PubNub AngularJS on GitHub](https://github.com/pubnub/angular-js/issues) if you have any ideas for future enhancements!
 
 The PubNub AngularJS library should look familiar to experienced
 developers in Angular development as well as to folks who have explored
