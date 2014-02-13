@@ -108,7 +108,7 @@ callback for the presence events:
   PubNub.ngHereNow({ channel: theChannel });
 ```
 
-In this case, PubNub.ngPrsEv(theChannel)` returns the "event name" string that identifies
+In this case, `PubNub.ngPrsEv(theChannel)` returns the "event name" string that identifies
 presence events for the specified channel.
 
 The presence event payload contains a bunch of useful information for
