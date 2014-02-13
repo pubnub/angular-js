@@ -35,7 +35,7 @@ the main entry point for the application.
 Here are the script includes you'll need to get started:
 
     <script src="http://cdn.pubnub.com/pubnub.min.js"></script>
-    <script src="http://pubnub.github.io/angular-js/components/angular/angular.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script>
     <script src="http://pubnub.github.io/angular-js/scripts/pubnub-angular.js"></script>
 
 The web app is Angular-enabled with an ng-app attribute:
