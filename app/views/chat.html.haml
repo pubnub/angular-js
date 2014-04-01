@@ -56,7 +56,7 @@
           %small.marker Online Users
           %ul.list-unstyled
             %li(ng-repeat="user in users")
-              %span.label.btn-mini.userlabel(ng-class="{'label-default': user != data.username, 'label-info': (user == data.username)}")
+              %span.label.btn-mini.userlabel(ng-class="{'label-default': user != data.username, 'label-info': (user == data.username)}" title='(Location: {{userData[user].city || "unknown"}})')
                 %i.fa.fa-user
                 {{user}}
 

@@ -11,7 +11,9 @@ angular.module('PubNubAngularApp')
     $scope.join = ->
       $rootScope.data ||= {}
       $rootScope.data.username = $scope.data?.username
+      $rootScope.data.city     = $scope.data?.city
       $rootScope.data.super    = $scope.data?.super
+      $rootScope.data.uuid     = Math.floor(Math.random() * 1000000) + '__' + $scope.data.username
 
       #
       # NOTE! We include the secret & auth keys here only for demo purposes!
@@ -29,7 +31,7 @@ angular.module('PubNubAngularApp')
         # WARNING: DEMO purposes only, never provide secret key in a real web application!
         secret_key    : $rootScope.secretKey
         auth_key      : $rootScope.authKey
-        uuid          : Math.floor(Math.random() * 1000000) + '__' + $scope.data.username
+        uuid          : $rootScope.data.uuid
         ssl           : true
       })
       
@@ -95,12 +97,27 @@ angular.module('PubNubAngularApp')
       $scope.selectedChannel = channel
       $scope.messages = ['Welcome to ' + channel]
 
-      PubNub.ngSubscribe { channel: $scope.selectedChannel, auth_key: $scope.authKey, error: -> console.log arguments }
+      PubNub.ngSubscribe {
+        channel: $scope.selectedChannel
+        auth_key: $scope.authKey
+        state: {"city":$rootScope.data?.city || 'unknown'}
+        error: -> console.log arguments
+      }
       $rootScope.$on PubNub.ngPrsEv($scope.selectedChannel), (ngEvent, payload) ->
         $scope.$apply ->
-          $scope.users = PubNub.map PubNub.ngListPresence($scope.selectedChannel), (x) -> x.replace(/\w+__/, "")
+          userData = PubNub.ngPresenceData $scope.selectedChannel
+          newData  = {}
+          $scope.users    = PubNub.map PubNub.ngListPresence($scope.selectedChannel), (x) ->
+            newX = x
+            if x.replace
+              newX = x.replace(/\w+__/, "")
+            if x.uuid
+              newX = x.uuid.replace(/\w+__/, "")
+            newData[newX] = userData[x] || {}
+            newX
+          $scope.userData = newData
 
-      PubNub.ngHereNow { channel: $scope.selectedChannel }
+      PubNub.ngHereNow { channel:$scope.selectedChannel }
 
       $rootScope.$on PubNub.ngMsgEv($scope.selectedChannel), (ngEvent, payload) ->
         msg = if payload.message.user then "[#{payload.message.user}] #{payload.message.text}" else "[unknown] #{payload.message}"

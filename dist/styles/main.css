@@ -1,3 +1,11 @@
+@media (max-width: 767px)
+{
+    body {
+        padding-right: 0px;
+        padding-left: 0px;
+    }
+}
+
 .chatbox {
   font-family:Lato;
   width:100%;

@@ -90,11 +90,19 @@ returned by <code>PubNub.ngPrsEv(channel)</code>.
   PubNub.ngHereNow { channel: theChannel }</pre>
 <p>
 Using the presence event as a trigger, we retrieve the Presence
-list for a channel using the <code>PubNub.ngListPresence()</code>
+list for a channel using the <code>PubNub.ngListPresence(channel)</code>
 function.
 </p>
 <pre class='well'>$rootScope.$on(PubNub.ngPrsEv(theChannel), function(event, payload) {
   $scope.users = PubNub.ngListPresence(theChannel);
+})</pre>
+<p>
+It's also possible to retrieve the extended Presence state data
+for a channel using the <code>PubNub.ngPresenceData(channel)</code>
+function.
+</p>
+<pre class='well'>$rootScope.$on(PubNub.ngPrsEv(theChannel), function(event, payload) {
+  $scope.userData = PubNub.ngPresenceData(theChannel);
 })</pre>
 <h4>Retrieving History</h4>
 <p>
@@ -119,6 +127,28 @@ method. The library even takes care of removing the Angular event handlers
 for you to prevent unsightly memory leaks!
 </p>
 <pre class='well'>PubNub.ngUnsubscribe({channel:theChannel})</pre>
+<h4>Restricting Access (Advanced)</h4>
+<p>
+Often times, it's desirable to lock down applications and channels.
+With PAM (PubNub Access Manager), it's easy. There are 2 calls:
+<code>grant</code> which grants access for users having a specified
+auth key, and <code>audit</code> which returns the current policy
+configuration.
+</p>
+<p>
+Note: to perform access control operations, the PubNub client must
+be initialized with the secret key (which should always be protected
+by server-only access).
+</p>
+<pre class='well'>PubNub.ngGrant({channel:theChannel,auth_key:'readers_must_have_this_secret',read:true,write:false,callback:function(){...}});
+# now clients providing the auth key can read...
+
+PubNub.ngAudit({channel:theChannel,auth_key:'readers_must_have_this_secret',callback:function(policy){...}});
+# calls back with the policy description as a JSON object...</pre>
+<p>
+If this is interesting to you, see http://www.pubnub.com/docs/javascript/overview/security.html
+for more details!
+</p>
 </div>
 <hr>
 <section id='angular_api_reference'>
@@ -131,8 +161,17 @@ for you to prevent unsightly memory leaks!
 <li><code>PubNub.ngPublish({channel:aChannel,message:aMessage})</code>: publish a message to the specified channel</li>
 <li><code>PubNub.ngHistory({channel:aChannel})</code>: calls PUBNUB.history with the specified channel to produce root scope message broadcast events (make sure the code is subscribed to the channel and channel message events)</li>
 <li><code>PubNub.ngHereNow({channel:aChannel})</code>: calls PUBNUB.here_now with the specified channel to produce root scope presence broadcast events (make sure the code is subscribed to the channel and channel presence events)</li>
+<li><code>PubNub.ngWhereNow()</code>: returns user/channel subscription data</li>
+<li><code>PubNub.ngAuth()</code>: updates the auth_key associated with the PubNub session</li>
+<li><code>PubNub.ngAudit()</code>: displays PAM (PubNub Access Manager) settings, see http://www.pubnub.com/docs/javascript/api/reference.html#access</li>
+<li><code>PubNub.ngGrant()</code>: grants acccess via PAM (PubNub Access Manager), see http://www.pubnub.com/docs/javascript/api/reference.html#grant</li>
+<li><code>PubNub.ngRevoke()</code>: revokes acccess via PAM (PubNub Access Manager), see http://www.pubnub.com/docs/javascript/api/reference.html#grant</li>
+<li><code>PubNub.ngListPresence(channel)</code>: returns the list of subscribers for a channel</li>
+<li><code>PubNub.ngPresenceData(channel)</code>: returns the map of uuid to extended state data for a channel</li>
 <li><code>PubNub.ngListChannels()</code>: returns the list of channels that the PubNub Angular API is connected to</li>
 <li><code>PubNub.ngListPresence(channel)</code>: returns the list of subscribers for a channel</li>
+<li><code>PubNub.ngState({channel:channel})</code>: retrieves extended user state for a channel</li>
+<li><code>PubNub.ngState({channel:channel,state:newState})</code>: updates extended user state for a channel</li>
 <li><code>PubNub.ngMsgEv(channel)</code>: returns the root scope broadcast event name for message events for a given channel</li>
 <li><code>PubNub.ngPrsEv(channel)</code>: returns the root scope broadcast event name for presence events for a given channel</li>
 </ul>
@@ -165,8 +204,3 @@ time.
 </section>
 </article>
 </div>
-<!-- %section#annotated_source -->
-<!-- .holder -->
-<!-- .frame -->
-<!-- %h2 Annotated Example Source -->
-<!-- %pre#source.well(ng-include=true src="'scripts/controllers/main.js'") -->

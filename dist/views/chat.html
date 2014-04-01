@@ -21,6 +21,9 @@ Welcome {{data.username}}, click to select a channel below (
 <a ng-href='#/join'>sign out</a>
 )
 </h6>
+<ul class='list-unstyled list-inline' ng-show='!channels'>
+<li>There are no channels. Log in as super to create some!</li>
+</ul>
 <ul class='list-unstyled list-inline'>
 <li class='roomlabel' ng-repeat='channel in channels'>
 <a class='btn btn-info' href='' ng-class="{'label-default': user != data.username, 'label-info': (channel != selectedChannel), 'label-warning':(channel == selectedChannel)}" ng-click='subscribe(channel)'>
@@ -28,7 +31,13 @@ Welcome {{data.username}}, click to select a channel below (
 {{channel}}
 </a>
 </li>
-<li class='roomlabel'>
+<li class='roomlabel' ng-show='data.super'>
+<a class='btn btn-danger' href='' ng-click='subscribe("SuperHeroes")'>
+<i class='fa' ng-class="{'fa-spin':('SuperHeroes' == selectedChannel), 'fa-spinner':('SuperHeroes' == selectedChannel), 'fa-comments':('SuperHeroes' != selectedChannel)}"></i>
+SuperHeroes!
+</a>
+</li>
+<li class='roomlabel' ng-show='data.super'>
 <a class='btn btn-default' href='' ng-click='showCreate = !showCreate'>
 <i class='fa fa-magic'></i>
 Create new...
@@ -54,7 +63,7 @@ Create new...
 <small class='marker'>Online Users</small>
 <ul class='list-unstyled'>
 <li ng-repeat='user in users'>
-<span class='label btn-mini userlabel' ng-class="{'label-default': user != data.username, 'label-info': (user == data.username)}">
+<span class='label btn-mini userlabel' ng-class="{'label-default': user != data.username, 'label-info': (user == data.username)}" title='(Location: {{userData[user].city || "unknown"}})'>
 <i class='fa fa-user'></i>
 {{user}}
 </span>
