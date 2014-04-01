@@ -78,14 +78,8 @@
           if (event.uuids) {
             c.each(event.uuids, function(uuid) {
               var state, _base, _base1;
-              uuid = uuid;
-              state = null;
-              if (uuid.state) {
-                state = uuid.state;
-              }
-              if (uuid.uuid) {
-                uuid = uuid.uuid;
-              }
+              state = uuid.state ? uuid.state : null;
+              uuid = uuid.uuid ? uuid.uuid : uuid;
               (_base = c['_presence'])[channel] || (_base[channel] = []);
               if (c['_presence'][channel].indexOf(uuid) < 0) {
                 c['_presence'][channel].push(uuid);

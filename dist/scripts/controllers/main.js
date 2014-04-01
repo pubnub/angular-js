@@ -139,6 +139,7 @@
 
     $scope.subscribe = function(channel) {
       var _ref;
+      console.log('subscribe', channel);
       if (channel === $scope.selectedChannel) {
         return;
       }
