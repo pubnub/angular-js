@@ -63,7 +63,7 @@ Create new...
 <small class='marker'>Online Users</small>
 <ul class='list-unstyled'>
 <li ng-repeat='user in users'>
-<span class='label btn-mini userlabel' ng-class="{'label-default': user != data.username, 'label-info': (user == data.username)}">
+<span class='label btn-mini userlabel' ng-class="{'label-default': user != data.username, 'label-info': (user == data.username)}" title='(Location: {{userData[user].city || "unknown"}})'>
 <i class='fa fa-user'></i>
 {{user}}
 </span>

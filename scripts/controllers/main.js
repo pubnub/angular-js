@@ -10,10 +10,12 @@
       username: 'Anonymous ' + Math.floor(Math.random() * 1000)
     };
     $scope.join = function() {
-      var _ref, _ref1;
+      var _ref, _ref1, _ref2;
       $rootScope.data || ($rootScope.data = {});
       $rootScope.data.username = (_ref = $scope.data) != null ? _ref.username : void 0;
-      $rootScope.data["super"] = (_ref1 = $scope.data) != null ? _ref1["super"] : void 0;
+      $rootScope.data.city = (_ref1 = $scope.data) != null ? _ref1.city : void 0;
+      $rootScope.data["super"] = (_ref2 = $scope.data) != null ? _ref2["super"] : void 0;
+      $rootScope.data.uuid = Math.floor(Math.random() * 1000000) + '__' + $scope.data.username;
       $rootScope.secretKey = $scope.data["super"] ? 'sec-c-MmIzMDAzNDMtODgxZC00YzM3LTk1NTQtMzc4NWQ1NmZhYjIy' : null;
       $rootScope.authKey = $scope.data["super"] ? 'ChooseABetterSecret' : null;
       PubNub.init({
@@ -21,7 +23,7 @@
         publish_key: 'pub-c-e2b65946-31f0-4941-a1b8-45bab0032dd8',
         secret_key: $rootScope.secretKey,
         auth_key: $rootScope.authKey,
-        uuid: Math.floor(Math.random() * 1000000) + '__' + $scope.data.username,
+        uuid: $rootScope.data.uuid,
         ssl: true
       });
       if ($scope.data["super"]) {
@@ -136,6 +138,7 @@
     /* Select a channel to display chat history & presence*/
 
     $scope.subscribe = function(channel) {
+      var _ref;
       console.log('subscribe', channel);
       if (channel === $scope.selectedChannel) {
         return;
@@ -150,15 +153,31 @@
       PubNub.ngSubscribe({
         channel: $scope.selectedChannel,
         auth_key: $scope.authKey,
+        state: {
+          "city": ((_ref = $rootScope.data) != null ? _ref.city : void 0) || 'unknown'
+        },
         error: function() {
           return console.log(arguments);
         }
       });
       $rootScope.$on(PubNub.ngPrsEv($scope.selectedChannel), function(ngEvent, payload) {
         return $scope.$apply(function() {
-          return $scope.users = PubNub.map(PubNub.ngListPresence($scope.selectedChannel), function(x) {
-            return x.replace(/\w+__/, "");
+          var newData, userData;
+          userData = PubNub.ngPresenceData($scope.selectedChannel);
+          newData = {};
+          $scope.users = PubNub.map(PubNub.ngListPresence($scope.selectedChannel), function(x) {
+            var newX;
+            newX = x;
+            if (x.replace) {
+              newX = x.replace(/\w+__/, "");
+            }
+            if (x.uuid) {
+              newX = x.uuid.replace(/\w+__/, "");
+            }
+            newData[newX] = userData[x] || {};
+            return newX;
           });
+          return $scope.userData = newData;
         });
       });
       PubNub.ngHereNow({
@@ -173,7 +192,7 @@
       });
       return PubNub.ngHistory({
         channel: $scope.selectedChannel,
-        auth_key: $scope.data.authKey,
+        auth_key: $scope.authKey,
         count: 500
       });
     };
