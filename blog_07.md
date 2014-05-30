@@ -1,7 +1,7 @@
 # Zero to Angular in Seconds - Multiplexing Edition
 
 Welcome back to our blog series about how to get started quickly with
-AngularJS using the PubNub AngularJS library. In a [http://www.pubnub.com/blog/angularjs-101-from-zero-to-angular-in-seconds/|recent episode],
+AngularJS using the PubNub AngularJS library. In a [recent episode](http://www.pubnub.com/blog/angularjs-101-from-zero-to-angular-in-seconds/),
 we covered a tiny but powerful example of how to get started with
 a real-time Angular Chat application in less than 100 lines of code.
 
