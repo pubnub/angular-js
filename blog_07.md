@@ -20,7 +20,7 @@ super easy to make this happen with minimal code tweaks!
 First off, let's take a look at the situations where you might take
 advantage of Multiplexing:
 
-* You're using one channel per Stock in a [http://rtstock.co/|stock-updates app]
+* You're using one channel per Stock in a [stock-updates app](http://rtstock.co/)
 * You have a "livecast" or "second screen" app, and would like to break out group chat into a different channel (for example, to reduce noise and/or restrict publish access permissions)
 * You'd like to have separate channels for "in-app" notifications versus user-to-user communications
 * In a game or collaboration app, you'd like to have a channel per "space", and allow users to participate in multiple areas
