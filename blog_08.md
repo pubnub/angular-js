@@ -18,8 +18,9 @@ useful because it makes messages opaque *before they are sent*, and prevents
 third parties from snooping even if the messages are intercepted en route
 to the recipient (or after the fact). The biggest advantage of crypto in PubNub
 is that it allows your app to use secure communications with just one additional
-line of config (!). Thanks to the magic of Angular and PubNub, it's super easy
-to make this happen with minimal code tweaks.
+line of config (!). Stay tuned and we'll show you just what line of code that
+is. Thanks to the magic of Angular and PubNub, it's super easy to make this
+happen with minimal code tweaks.
 
 First off, let's take a look at the situations where you might take
 advantage of cryptography:
