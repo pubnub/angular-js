@@ -1,0 +1,105 @@
+<!doctype html>
+<html>
+<head>
+  <script src="https://cdn.pubnub.com/pubnub.min.js"></script>
+  <script src="https://cdn.pubnub.com/pubnub-crypto.min.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular.min.js"></script>
+  <script src="//code.jquery.com/jquery-1.10.1.min.js"></script>
+  <script src="http://pubnub.github.io/angular-js/scripts/pubnub-angular.js"></script>
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container" ng-app="PubNubAngularApp" ng-controller="ChatCtrl">
+
+<h4>Channel Subscriptions</h4>
+
+<input type="checkbox" ng-model="subscriptions.channel1" ng-change="updateSubscription('channel1')" /> Channel 1
+<br />
+<input type="checkbox" ng-model="subscriptions.channel2" ng-change="updateSubscription('channel2')" /> Channel 2
+<br/>
+
+<h4>Message History</h4>
+
+<form>
+  <input type="text" ng-model='newMessage' />
+  <button ng-click="publish('channel1')">Send to Channel 1</button>
+  <button ng-click="publish('channel2')">Send to Channel 2</button>
+</form>
+
+<br />
+
+<div class="well">
+<ul>
+<li ng-repeat="message in messages">{{message}}</li>
+</ul>
+</div>
+
+</div>
+
+<script>
+//
+// Set Up Your Angular Module & Controller(s)
+//
+angular.module('PubNubAngularApp', ["pubnub.angular.service"])
+.controller('ChatCtrl', function($rootScope, $scope, $location, PubNub) {
+  // make up a user id (you probably already have this)
+  $scope.userId   = "User " + Math.round(Math.random() * 1000);
+  // set up initial channel memberships
+  $scope.subscriptions = { channel1 : true, channel2 : false };
+  // pre-populate any existing messages (just an AngularJS scope object)
+  $scope.messages = ['Welcome to Channel 1'];
+
+  if (!$rootScope.initialized) {
+    // Initialize the PubNub service
+    PubNub.init({
+      subscribe_key: 'demo',
+      publish_key: 'demo',
+      uuid:$scope.userId
+    });
+    $rootScope.initialized = true;
+  }
+
+  // Create a function to subscribe to a channel
+  $scope.subscribe = function(theChannel) {
+    // Subscribe to the channel via PubNub
+    PubNub.ngSubscribe({ channel: theChannel });
+
+    // Register for message events
+    $rootScope.$on(PubNub.ngMsgEv(theChannel), function(ngEvent, payload) {
+      $scope.$apply(function() {
+        $scope.messages.push(payload.message);
+      });
+    });
+  };
+  
+  // Create a function to unsubscribe from a channel
+  $scope.unsubscribe = function(theChannel) {
+    // Unsubscribe from the channel via PubNub
+    PubNub.ngUnsubscribe({ channel: theChannel });
+  };
+
+  // Create a publish() function in the scope
+  $scope.publish = function(channel) {
+    PubNub.ngPublish({
+      channel: channel,
+      message: "[" + $scope.userId + "@" + channel + "] " + $scope.newMessage
+    });
+    $scope.newMessage = '';
+  };
+
+  // Create a subscribe/unsubscribe click handler
+  $scope.updateSubscription = function(theChannel) {
+    if ($scope.subscriptions[theChannel]) {
+      $scope.subscribe(theChannel);
+    } else {
+      $scope.unsubscribe(theChannel);
+    }
+  };
+
+  // Set up the initial channel subscriptions
+  $scope.updateSubscription('channel1');
+  $scope.updateSubscription('channel2');
+});
+</script>
+</body>
+</html>
