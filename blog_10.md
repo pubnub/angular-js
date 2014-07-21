@@ -9,7 +9,7 @@ AngularJS library. This README is still super useful, although we hope to experi
 importantly for this blog entry, we recently discovered the [Docco](http://jashkenas.github.io/docco/)
 library for creating annotated source code, and instantly fell in love!
 
-You may already be familiar with Docco if you use the Underscore JS library - it's what
+You may already be familiar with Docco if you use the [Underscore JS](http://underscorejs.org/) library - it's what
 powers the Underscore [annotated source code](http://underscorejs.org/docs/underscore.html)
 feature. We found it to be tremendously helpful as we learned about Underscore internals,
 and figured we'd try to apply this awesome tool to the [PubNub AngularJS](https://github.com/pubnub/pubnub-angular)
