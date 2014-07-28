@@ -5,6 +5,37 @@
   <script src="https://rawgit.com/pubnub/javascript/feature-pt74838232/web/pubnub.js"></script>
   <script src="https://rawgit.com/pubnub/pubnub-angular/v1.2.0-beta.2/lib/pubnub-angular.js"></script>
   <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+</head>
+<body ng-app="DataSyncApp">
+<div class="container" ng-controller="DataSyncController">
+  <div class="row">
+  <h1>DataSync</h1>
+  <table>
+  <tr>
+    <td><h4>Database Name</h4><input ng-model="object_id"></td>
+    <td><h4>Path</h4><input ng-model="path"></td>
+    <td><h4>Absolute Path</h4><input ng-model="absolute_path" readonly></td>
+  </tr>
+  <tr>
+    <td colspan=3>
+      <button ng-click="get()">get</button>
+      <button ng-click="set()">set</button>
+      <button ng-click="merge()">merge</button>
+      <button ng-click="remove()">remove</button>
+      <button ng-click="watch()">watch</button>
+      <button ng-click="sync()">sync</button>
+    </td>
+  </tr>
+  <tr>
+    <td colspan=3>
+      <div class="well">
+        {{theObj}}
+      </div>
+    </td>
+  </tr>
+  </table>
+  </div>
+</div>
 <script>
 var app = angular.module('DataSyncApp', ["pubnub.angular.service"]);
 
@@ -62,36 +93,5 @@ app.controller('DataSyncController', ['$scope', '$timeout', 'PubNub', function($
 }]);
 
 </script>
-</head>
-<body ng-app="DataSyncApp">
-<div class="container" ng-controller="DataSyncController">
-  <div class="row">
-  <h1>DataSync</h1>
-  <table>
-  <tr>
-    <td><h4>Database Name</h4><input ng-model="object_id"></td>
-    <td><h4>Path</h4><input ng-model="path"></td>
-    <td><h4>Absolute Path</h4><input ng-model="absolute_path" readonly></td>
-  </tr>
-  <tr>
-    <td colspan=3>
-      <button ng-click="get()">get</button>
-      <button ng-click="set()">set</button>
-      <button ng-click="merge()">merge</button>
-      <button ng-click="remove()">remove</button>
-      <button ng-click="watch()">watch</button>
-      <button ng-click="sync()">sync</button>
-    </td>
-  </tr>
-  <tr>
-    <td colspan=3>
-      <div class="well">
-        {{theObj}}
-      </div>
-    </td>
-  </tr>
-  </table>
-  </div>
-</div>
 </body>
 </html>
