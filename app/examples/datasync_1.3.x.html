@@ -6,8 +6,8 @@
   <script src="https://rawgit.com/pubnub/pubnub-angular/v1.2.0-beta.2/lib/pubnub-angular.js"></script>
   <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
 </head>
-<body ng-app="DataSyncApp">
-<div class="container" ng-controller="DataSyncController">
+<body>
+<div class="container" ng-app="DataSyncApp" ng-controller="DataSyncController">
   <div class="row">
   <h1>DataSync</h1>
   <table>
@@ -39,14 +39,14 @@
 <script>
 var app = angular.module('DataSyncApp', ["pubnub.angular.service"]);
 
-app.controller('DataSyncController', ['$scope', '$timeout', 'PubNub', function($scope, $timeout, PubNub) {
+app.controller('DataSyncController', ['$scope', 'PubNub', function($scope, PubNub) {
   PubNub.init({
     publish_key   : "pub-c-YOURPUBKEY", // NOTE: app key must be enabled for DataSync BETA!
     subscribe_key : "sub-c-YOURSUBKEY", // NOTE: app key must be enabled for DataSync BETA!
     origin        : "pubsub-beta.pubnub.com"
   });
 
-  logit = function(prefix) { return function() {console.log(prefix, arguments);} }
+  var logit = function(prefix) { return function() {console.log(prefix, arguments);} }
 
   $scope.object_id = 'foo';
   $scope.path = '';
@@ -79,13 +79,13 @@ app.controller('DataSyncController', ['$scope', '$timeout', 'PubNub', function($
     }).then(logit('merge'));
   }
 
-  $scope.watch  = function() { PubNub.datasync_BETA.ngWatch($scope.getObjDesc()); }
-
   $scope.sync   = function() {
     var args = $scope.getObjDesc();
     args.callback = logit('sync!');
     $scope.theObj = PubNub.datasync_BETA.ngGetSyncedObject(args);
   }
+
+  $scope.watch  = function() { PubNub.datasync_BETA.ngWatch($scope.getObjDesc()); }
 
   $scope.$on(PubNub.datasync_BETA.ngObjPathEv('foo'),    logit('path_event'));
   $scope.$on(PubNub.datasync_BETA.ngObjPathRecEv('foo'), logit('path_rec_event'));
