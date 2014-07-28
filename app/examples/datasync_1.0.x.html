@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script>
+  <script src="https://rawgit.com/pubnub/javascript/feature-pt74838232/web/pubnub.js"></script>
+  <script src="https://rawgit.com/pubnub/pubnub-angular/v1.2.0-beta.1/lib/pubnub-angular.js"></script>
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+<script>
+var app = angular.module('DataSyncApp', ["pubnub.angular.service"]);
+
+app.controller('DataSyncController', ['$scope', '$timeout', 'PubNub', function($scope, $timeout, PubNub) {
+  PubNub.init({
+    publish_key   : "pub-c-YOURPUBKEY", // NOTE: app key must be enabled for DataSync BETA!
+    subscribe_key : "sub-c-YOURSUBKEY", // NOTE: app key must be enabled for DataSync BETA!
+    origin        : "pubsub-beta.pubnub.com"
+  });
+
+  logit = function(prefix) { return function() {console.log(prefix, arguments);} }
+
+  $scope.object_id = 'foo';
+  $scope.path = '';
+  $scope.absolute_path = 'foo';
+  
+  $scope.$watch('object_id + path', function(x) {
+    $scope.absolute_path = $scope.object_id + ($scope.path ? "." + $scope.path : '');
+  });
+
+  $scope.theObj = null;
+
+  $scope.getObjDesc = function() {
+    return {object_id : $scope.object_id, path : $scope.path};
+  }
+
+  $scope.get    = function() { PubNub.datasync_BETA.ngGet($scope.getObjDesc()).then(function(x) { $scope.theObj = x; }); }
+  $scope.remove = function() { PubNub.datasync_BETA.ngRemove({object_id:$scope.object_id}).then(logit('remove')); }
+  
+  $scope.set = function() {
+    PubNub.datasync_BETA.ngSet({
+      object_id : $scope.object_id,
+      data : { 'isAwesome' : true }
+    }).then(logit('set'));
+  }
+
+  $scope.merge = function() {
+    PubNub.datasync_BETA.ngMerge({
+      object_id : $scope.object_id,
+      data : { 'time' : new Date() }
+    }).then(logit('merge'));
+  }
+
+  $scope.watch  = function() { PubNub.datasync_BETA.ngWatch($scope.getObjDesc()); }
+
+  $scope.sync   = function() {
+    var args = $scope.getObjDesc();
+    args.callback = logit('sync!');
+    $scope.theObj = PubNub.datasync_BETA.ngGetSyncedObject(args);
+  }
+
+  $scope.$on(PubNub.datasync_BETA.ngObjPathEv('foo'),    logit('path_event'));
+  $scope.$on(PubNub.datasync_BETA.ngObjPathRecEv('foo'), logit('path_rec_event'));
+  $scope.$on(PubNub.datasync_BETA.ngObjDsEv('foo'),      logit('dstr_event'));
+}]);
+
+</script>
+</head>
+<body ng-app="DataSyncApp">
+<div class="container" ng-controller="DataSyncController">
+  <div class="row">
+  <h1>DataSync</h1>
+  <table>
+  <tr>
+    <td><h4>Database Name</h4><input ng-model="object_id"></td>
+    <td><h4>Path</h4><input ng-model="path"></td>
+    <td><h4>Absolute Path</h4><input ng-model="absolute_path" readonly></td>
+  </tr>
+  <tr>
+    <td colspan=3>
+      <button ng-click="get()">get</button>
+      <button ng-click="set()">set</button>
+      <button ng-click="merge()">merge</button>
+      <button ng-click="remove()">remove</button>
+      <button ng-click="watch()">watch</button>
+      <button ng-click="sync()">sync</button>
+    </td>
+  </tr>
+  <tr>
+    <td colspan=3>
+      <div class="well">
+        {{theObj}}
+      </div>
+    </td>
+  </tr>
+  </table>
+  </div>
+</div>
+</body>
+</html>
