@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular.min.js"></script>
-  <script src="https://rawgit.com/pubnub/javascript/feature-pt74838232/web/pubnub.js"></script>
-  <script src="https://rawgit.com/pubnub/pubnub-angular/v1.2.0-beta.2/lib/pubnub-angular.js"></script>
+  <script src="https://rawgit.com/pubnub/javascript/feature-pt74838232-2/web/pubnub.js"></script>
+  <script src="https://rawgit.com/pubnub/pubnub-angular/v1.2.0-beta.3/lib/pubnub-angular.js"></script>
   <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
 </head>
 <body>
@@ -80,18 +80,15 @@ app.controller('DataSyncController', ['$scope', 'PubNub', function($scope, PubNu
   }
 
   $scope.sync   = function() {
-    var args = $scope.getObjDesc();
-    args.callback = logit('sync!');
-    $scope.theObj = PubNub.datasync_BETA.ngGetSyncedObject(args);
+    $scope.theObj = PubNub.datasync_BETA.ngSync($scope.object_id).content.data;
   }
 
   $scope.watch  = function() { PubNub.datasync_BETA.ngWatch($scope.getObjDesc()); }
 
-  $scope.$on(PubNub.datasync_BETA.ngObjPathEv('foo'),    logit('path_event'));
-  $scope.$on(PubNub.datasync_BETA.ngObjPathRecEv('foo'), logit('path_rec_event'));
-  $scope.$on(PubNub.datasync_BETA.ngObjDsEv('foo'),      logit('dstr_event'));
+  $scope.$on(PubNub.datasync_BETA.ngObjPathEv($scope.object_id),    logit('path_event'));
+  $scope.$on(PubNub.datasync_BETA.ngObjPathRecEv($scope.object_id), logit('path_rec_event'));
+  $scope.$on(PubNub.datasync_BETA.ngObjDsEv($scope.object_id),      logit('dstr_event'));
 }]);
-
 </script>
 </body>
 </html>

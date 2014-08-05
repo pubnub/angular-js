@@ -36,8 +36,8 @@ Setup of the PubNub Angular library is pretty much the same as with the original
 <html lang="en">
 <head>
 <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script>
-<script src="https://rawgit.com/pubnub/javascript/feature-pt74838232/web/pubnub.min.js"></script>
-<script src="https://rawgit.com/pubnub/pubnub-angular/v1.2.0-beta.2/lib/pubnub-angular.js"></script>
+<script src="https://rawgit.com/pubnub/javascript/feature-pt74838232-2/web/pubnub.min.js"></script>
+<script src="https://rawgit.com/pubnub/pubnub-angular/v1.2.0-beta.3/lib/pubnub-angular.js"></script>
 <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
 </head>
 <body>
@@ -227,36 +227,40 @@ update capabilities!
 
 ```
 $scope.sync   = function() {
-  var args = $scope.getObjDesc();
-  args.callback = logit('sync!');
-  $scope.theObj = PubNub.datasync_BETA.ngGetSyncedObject(args);
+  $scope.theObj = PubNub.datasync_BETA.ngSync($scope.object_id);
 }
 ```
 
-This is my favorite operation - `ngGetSyncedObject()` returns an
+This is my favorite operation - `ngSync()` returns an
 empty object which is populated from the current value and
-continuously updated in real-time. In addition, the `callback`
-function will be called after each real-time update.
+continuously updated in real-time. In addition, broadcast
+events will be sent to the AngularJS $rootScope after each
+real-time update!
 
 This packs a *ton* of power into a tiny amount of code. When
 was the last time you saw an entire global real-time update
 infrastructure wired up in a single line of code?
 
-```
-$scope.watch  = function() { PubNub.datasync_BETA.ngWatch($scope.getObjDesc()); }
+Here's how to watch for update events:
 
+```
 $scope.$on(PubNub.datasync_BETA.ngObjPathEv('foo'),    logit('path_event'));
 $scope.$on(PubNub.datasync_BETA.ngObjPathRecEv('foo'), logit('path_rec_event'));
 $scope.$on(PubNub.datasync_BETA.ngObjDsEv('foo'),      logit('dstr_event'));
 ```
 
-Finally, we show you how to use the `ngWatch()` function. All you do
-is call it with the object_id and path you care about, and update
-events will be broadcast on 3 different channels.
-
 * `ngObjPathEv()` - returns the Angular event name for a given object_id and path
 * `ngObjPathRecEv()` - returns the Angular event name for recursive updates to a given object_id and path
 * `ngObjDsEv()` - returns the Angular event name for a given object_id (when transactions complete)
+
+For advanced use cases, you may just want to watch for raw update
+events: this is possible using the `ngWatch()` function. All you do
+is call it with the object_id and path you care about, and update
+events will be broadcast on the 3 different channels listed above.
+
+```
+$scope.watch  = function() { PubNub.datasync_BETA.ngWatch($scope.getObjDesc()); }
+```
 
 NOTE: at the time of writing of this blog entry, it was only possible
 to use one of `sync()` or `watch()` at a time. Choose wisely! For me,
