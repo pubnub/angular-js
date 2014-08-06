@@ -1,0 +1,30 @@
+= image:pubnub.png[] =
+
+== PubNub AngularJS Library - Now Featuring Docco Documentation! ==
+
+Here at PubNub, we love documentation, as you probably already guessed
+from our extensive collection of http://www.pubnub.com/developers/[client SDKs] and
+http://www.pubnub.com/docs/javascript/api/reference.html[detailed API documentation].
+Up until now, we've been using Markdown mostly for the https://github.com/pubnub/pubnub-angular/blob/master/README.md[README-level documentation] of the
+AngularJS library. We are to experimenting with http://www.methods.co.nz/asciidoc/[asciidoc] now. We also recently discovered the http://jashkenas.github.io/docco/[Docco]
+library for creating annotated source code, and instantly fell in love!
+
+You may already be familiar with Docco if you use the http://underscorejs.org/[Underscore JS] library - it's what
+powers the Underscore http://underscorejs.org/docs/underscore.html[annotated source code]
+feature. We found it to be tremendously helpful as we learned about Underscore internals,
+and figured we'd try to apply this awesome tool to the https://github.com/pubnub/pubnub-angular[PubNub AngularJS]
+library as well!
+
+Using Docco is just about as simple as you can get:
+
+1. Install docco via `npm install -g docco`
+2. Add comments to your JavaScript (or, in our case, CoffeeScript) source code
+3. Run `docco source_file.coffee` to generate the HTML documentation! (in a 'docs' directory by default)
+
+Please check out our initial cut of the documentation here at the http://pubnub.github.io/pubnub-angular/docs/pubnub-angular.html[PubNub AngularJS annotated source code],
+and let us know what you think! We love the idea of helping developers gain more insight
+into how this powerful library works, as well as provide an easy way for developers to
+easily submit changes or updates to the documentation.
+
+Do you have any tips, tricks or best practices that you'd suggest for the PubNub
+JavaScript frameworks or other SDK's? Please mailto:help@pubnub.com[drop us a line] and let us know!
