@@ -126,7 +126,7 @@
                 console.log('got a presence event:', payload);
               })
 
-              PubNub.ngHereNow { channel: theChannel }
+              PubNub.ngHereNow ({ channel: theChannel })
 
         %p
           Using the presence event as a trigger, we retrieve the Presence
