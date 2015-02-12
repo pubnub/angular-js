@@ -1,3 +1,5 @@
+# Please direct all Support Questions and Concerns to Support@PubNub.com
+
 = image:pubnub.png[] =
 
 == Angular-JS and PubNub Sample Application == 
