@@ -37,10 +37,6 @@ module.exports = function (grunt) {
                 files: ['test/spec/{,*/}*.coffee'],
                 tasks: ['coffee:test']
             },
-            compass: {
-                files: ['<%= yeoman.app %>/styles/{,*/}*.{scss,sass}'],
-                tasks: ['compass']
-            },
             livereload: {
                 files: [
                     '<%= yeoman.app %>/{,*/}*.html',
@@ -106,12 +102,6 @@ module.exports = function (grunt) {
                 '<%= yeoman.app %>/scripts/{,*/}*.js'
             ]
         },
-        karma: {
-            unit: {
-                configFile: 'karma.conf.js',
-                singleRun: true
-            }
-        },
         haml: {
             options: {
                 language: 'ruby'
@@ -121,7 +111,7 @@ module.exports = function (grunt) {
                     expand: true,
                     cwd: '<%= yeoman.app %>',
                     src: '{,*/}*.haml',
-                    dest: '.tmp',
+                    dest: 'dist',
                     ext: '.html'
                 }]
             }
@@ -132,7 +122,7 @@ module.exports = function (grunt) {
                     expand: true,
                     cwd: '<%= yeoman.app %>/scripts',
                     src: '{,*/}*.coffee',
-                    dest: '.tmp/scripts',
+                    dest: 'dist/scripts',
                     ext: '.js'
                 }]
             },
@@ -144,40 +134,6 @@ module.exports = function (grunt) {
                     dest: '.tmp/spec',
                     ext: '.js'
                 }]
-            }
-        },
-        compass: {
-            options: {
-                sassDir: '<%= yeoman.app %>/styles',
-                cssDir: '.tmp/styles',
-                imagesDir: '<%= yeoman.app %>/images',
-                javascriptsDir: '<%= yeoman.app %>/scripts',
-                fontsDir: '<%= yeoman.app %>/styles/fonts',
-                importPath: '<%= yeoman.app %>/components',
-                relativeAssets: true
-            },
-            dist: {},
-            server: {
-                options: {
-                    debugInfo: true
-                }
-            }
-        },
-        cdnify: {
-            dist: {
-                html: ['<%= yeoman.dist %>/*.html']
-            }
-        },
-        rev: {
-            dist: {
-                files: {
-                    src: [
-                        '<%= yeoman.dist %>/scripts/{,*/}*.js',
-                        '<%= yeoman.dist %>/styles/{,*/}*.css',
-                        '<%= yeoman.dist %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}',
-                        '<%= yeoman.dist %>/styles/fonts/*'
-                    ]
-                }
             }
         },
         copy: {
@@ -192,7 +148,12 @@ module.exports = function (grunt) {
                         '.htaccess',
                         'components/**/*',
                         'images/{,*/}*.{gif,webp}',
-                        'styles/fonts/*'
+                        'styles/fonts/*',
+                        'images/**/*',
+                        'styles/*',
+                        'fonts/**/*',
+                        'index.html',
+                        'mini.html'
                     ]
                 }]
             }
@@ -205,7 +166,6 @@ module.exports = function (grunt) {
         'clean:server',
         'haml:dist',
         'coffee:dist',
-        'compass:server',
         'livereload-start',
         'connect:livereload',
         'open',
@@ -216,7 +176,6 @@ module.exports = function (grunt) {
         'clean:server',
         'haml',
         'coffee',
-        'compass',
         'connect:test'
     ]);
 
@@ -226,10 +185,7 @@ module.exports = function (grunt) {
         'test',
         'haml',
         'coffee',
-        'compass:dist',
-        'copy',
-        'cdnify',
-        'rev'
+        'copy'
     ]);
 
     grunt.registerTask('default', ['build']);
