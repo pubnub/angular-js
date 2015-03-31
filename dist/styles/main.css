@@ -1,37 +1,32 @@
-@media (max-width: 767px)
-{
-    body {
-        padding-right: 0px;
-        padding-left: 0px;
-    }
+@media (max-width: 767px) {
+  body {
+    padding-right: 0;
+    padding-left: 0;
+  }
 }
 
 .chatbox {
-  font-family:Lato;
-  width:100%;
-  height:20em;
-  margin-top:6px;
-  overflow:scroll;
+  font-family: Lato;
+  width: 100%;
+  height: 20em;
+  margin-top: 6px;
+  overflow: scroll;
 }
 
 .userlabel {
-  margin-right:8px;
-  margin-top:6px;
+  margin-right: 8px;
+  margin-top: 6px;
 }
 
 .roomlabel {
-  margin-right:8px;
-  margin-top:6px;
-}
-
-#getting_started {
-  background-color:;
+  margin-right: 8px;
+  margin-top: 6px;
 }
 
 .brandP {
-  padding-top:20px;
+  padding-top: 20px;
 }
 
 .padding-20 {
-  padding:20px;
+  padding: 20px;
 }
