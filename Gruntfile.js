@@ -14,11 +14,6 @@ module.exports = function (grunt) {
         dist: 'dist'
     };
 
-    try {
-        yeomanConfig.app = require('./component.json').appPath || yeomanConfig.app;
-    } catch (e) {
-    }
-
     grunt.initConfig({
         yeoman: yeomanConfig,
         watch: {
