@@ -5,10 +5,12 @@
     <title>AngularJS PubNub Chat Application</title>
     <meta name="viewport" content="width=device-width">
 
-    <script src="https://cdn.pubnub.com/pubnub.min.js"></script>
-    <script src="https://cdn.pubnub.com/pubnub-crypto.min.js"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script>
-    <script src="//code.jquery.com/jquery-1.10.1.min.js"></script>
+    <script src="../app/components/jquery/dist/jquery.js"></script>
+    <script src="../app/components/underscore/underscore.js"></script>
+    <script src="../app/components/pubnub/web/pubnub.js"></script>
+    <script src="../app/components/angular/angular.js"></script>
+    <script src="../app/components/angular-route/angular-route.js"></script>
+
 
     <!-- build:css styles/main.css -->
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
@@ -22,7 +24,7 @@
     <div ng-view />
 
     <!-- build:js(.tmp) scripts/scripts.js -->
-    <script src="scripts/pubnub-angular.js"></script>
+    <script src="../app/components/pubnub-angular/index.js"></script>
     <script src="scripts/app.js"></script>
     <script src="scripts/controllers/main.js"></script>
 

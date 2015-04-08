@@ -18,7 +18,7 @@ enter a message in the box and click the 'Send' button.
 <div class='dialog dialog-success'>
 <h6>
 Welcome {{data.username}}, click to select a channel below (
-<a ng-href='#/join'>sign out</a>
+<a ng-click='sign_out()'>sign out</a>
 )
 </h6>
 <ul class='list-unstyled list-inline' ng-show='!channels'>
@@ -63,9 +63,9 @@ Create new...
 <small class='marker'>Online Users</small>
 <ul class='list-unstyled'>
 <li ng-repeat='user in users'>
-<span class='label btn-mini userlabel' ng-class="{'label-default': user != data.username, 'label-info': (user == data.username)}" title='(Location: {{userData[user].city || "unknown"}})'>
+<span class='label btn-mini userlabel' ng-class="{'label-default': (user.name != data.username), 'label-info': (user.name == data.username)}" title='(Location: {{users[user].city || "unknown"}})'>
 <i class='fa fa-user'></i>
-{{user}}
+{{user.name}}
 </span>
 </li>
 </ul>
@@ -82,7 +82,7 @@ Create new...
 </form>
 <div class='well chatbox' id='chat_history'>
 <ul class='list-unstyled'>
-<li ng-repeat='message in messages'>
+<li ng-repeat='message in messages track by $index'>
 <i class='fa fa-comment'></i>
 &nbsp;
 {{message}}

@@ -1,229 +1,338 @@
-(function() {
-  'use strict';
-  /*
-  The JoinCtrl is responsible for collecting the username and calling the PubNub.init() method
-  when the "Join" button is clicked.
-  */
+// TODO: super user behaviour
+angular.module('PubNubAngularApp').controller('JoinCtrl', function ($rootScope, $scope, $location, Pubnub) {
+    "use strict";
 
-  angular.module('PubNubAngularApp').controller('JoinCtrl', function($rootScope, $scope, $location, PubNub) {
+    $rootScope.initialized = false;
+
     $scope.data = {
-      username: 'Anonymous ' + Math.floor(Math.random() * 1000)
+        username: 'Anonymous ' + Math.floor(Math.random() * 1000)
     };
-    $scope.join = function() {
-      var _ref, _ref1, _ref2;
-      $rootScope.data || ($rootScope.data = {});
-      $rootScope.data.username = (_ref = $scope.data) != null ? _ref.username : void 0;
-      $rootScope.data.city = (_ref1 = $scope.data) != null ? _ref1.city : void 0;
-      $rootScope.data["super"] = (_ref2 = $scope.data) != null ? _ref2["super"] : void 0;
-      $rootScope.data.uuid = Math.floor(Math.random() * 1000000) + '__' + $scope.data.username;
-      $rootScope.secretKey = $scope.data["super"] ? 'sec-c-MmIzMDAzNDMtODgxZC00YzM3LTk1NTQtMzc4NWQ1NmZhYjIy' : null;
-      $rootScope.authKey = $scope.data["super"] ? 'ChooseABetterSecret' : null;
-      PubNub.init({
-        subscribe_key: 'sub-c-d66562f0-62b0-11e3-b12d-02ee2ddab7fe',
-        publish_key: 'pub-c-e2b65946-31f0-4941-a1b8-45bab0032dd8',
-        secret_key: $rootScope.secretKey,
-        auth_key: $rootScope.authKey,
-        uuid: $rootScope.data.uuid,
-        ssl: true
-      });
-      if ($scope.data["super"]) {
-        /* Grant access to the SuperHeroes room for supers only!*/
 
-        PubNub.ngGrant({
-          channel: 'SuperHeroes',
-          auth_key: $rootScope.authKey,
-          read: true,
-          write: true,
-          callback: function() {
-            return console.log('SuperHeroes! all set', arguments);
-          }
+    $scope.join = function () {
+        var _ref, _ref1, _ref2;
+
+        // TODO: simplify initialization
+        $rootScope.data || ($rootScope.data = {});
+        $rootScope.data.username = (_ref = $scope.data) != null ? _ref.username : void 0;
+        $rootScope.data.city = (_ref1 = $scope.data) != null ? _ref1.city : void 0;
+        $rootScope.data.super = (_ref2 = $scope.data) != null ? _ref2.super : void 0;
+        $rootScope.data.uuid = Math.floor(Math.random() * 1000000) + '__' + $scope.data.username;
+        $rootScope.secretKey = $scope.data["super"] ? 'sec-c-MmIzMDAzNDMtODgxZC00YzM3LTk1NTQtMzc4NWQ1NmZhYjIy' : null;
+        $rootScope.authKey = $scope.data["super"] ? 'ChooseABetterSecret' : null;
+
+        Pubnub.init({
+            subscribe_key: 'sub-c-d66562f0-62b0-11e3-b12d-02ee2ddab7fe',
+            publish_key: 'pub-c-e2b65946-31f0-4941-a1b8-45bab0032dd8',
+            secret_key: $rootScope.secretKey,
+            auth_key: $rootScope.authKey,
+            uuid: $rootScope.data.uuid,
+            ssl: true
         });
-        PubNub.ngGrant({
-          channel: "SuperHeroes-pnpres",
-          auth_key: $rootScope.authKey,
-          read: true,
-          write: false,
-          callback: function() {
-            return console.log('SuperHeroes! presence all set', arguments);
-          }
-        });
-        PubNub.ngGrant({
-          channel: '__controlchannel',
-          read: true,
-          write: true,
-          callback: function() {
-            return console.log('control channel all set', arguments);
-          }
-        });
-        PubNub.ngGrant({
-          channel: '__controlchannel-pnpres',
-          read: true,
-          write: false,
-          callback: function() {
-            return console.log('control channel presence all set', arguments);
-          }
-        });
-      }
-      return $location.path('/chat');
+
+        $rootScope.initialized = true;
+
+        if ($scope.data["super"]) {
+
+            /* Grant access to the SuperHeroes room for supers only!*/
+            Pubnub.grant({
+                channel: 'SuperHeroes',
+                auth_key: $rootScope.authKey,
+                read: true,
+                write: true,
+                callback: function () {
+                    return console.log('SuperHeroes! all set', arguments);
+                }
+            });
+
+            Pubnub.grant({
+                channel: "SuperHeroes-pnpres",
+                auth_key: $rootScope.authKey,
+                read: true,
+                write: false,
+                callback: function () {
+                    return console.log('SuperHeroes! presence all set', arguments);
+                }
+            });
+
+            Pubnub.grant({
+                channel: '__controlchannel',
+                read: true,
+                write: true,
+                callback: function () {
+                    return console.log('control channel all set', arguments);
+                }
+            });
+
+            Pubnub.grant({
+                channel: '__controlchannel-pnpres',
+                read: true,
+                write: false,
+                callback: function () {
+                    return console.log('control channel presence all set', arguments);
+                }
+            });
+        }
+
+        $location.path('/chat');
     };
-    return $(".prettyprint");
-  });
+});
 
-  /*
-  The ChatCtrl is responsible for creating, displaying, subscribing to, and
-  chatting in channels
-  */
-
-
-  angular.module('PubNubAngularApp').controller('ChatCtrl', function($rootScope, $scope, $location, PubNub) {
+angular.module('PubNubAngularApp').controller('ChatCtrl', function ($rootScope, $scope, $location, Pubnub) {
     var _ref;
-    if (!PubNub.initialized()) {
-      $location.path('/join');
-    }
-    /* Use a "control channel" to collect channel creation messages*/
 
+    if (!$rootScope.initialized) {
+        $location.path('/join');
+    }
+
+    /* Use a "control channel" to collect channel creation messages*/
     $scope.controlChannel = '__controlchannel';
     $scope.channels = [];
-    /* Publish a chat message*/
 
-    $scope.publish = function() {
-      console.log('publish', $scope);
-      if (!$scope.selectedChannel) {
-        return;
-      }
-      PubNub.ngPublish({
-        channel: $scope.selectedChannel,
-        message: {
-          text: $scope.newMessage,
-          user: $scope.data.username
+    $scope.publish = function () {
+        if (!$scope.selectedChannel) {
+            return;
         }
-      });
-      return $scope.newMessage = '';
-    };
-    /* Create a new channel*/
 
-    $scope.createChannel = function() {
-      var channel;
-      console.log('createChannel', $scope);
-      if (!($scope.data["super"] && $scope.newChannel)) {
-        return;
-      }
-      channel = $scope.newChannel;
-      $scope.newChannel = '';
-      PubNub.ngGrant({
-        channel: channel,
-        read: true,
-        write: true,
-        callback: function() {
-          return console.log("" + channel + " all set", arguments);
-        }
-      });
-      PubNub.ngGrant({
-        channel: "" + channel + "-pnpres",
-        read: true,
-        write: false,
-        callback: function() {
-          return console.log("" + channel + " presence all set", arguments);
-        }
-      });
-      PubNub.ngPublish({
-        channel: $scope.controlChannel,
-        message: channel
-      });
-      return setTimeout(function() {
-        $scope.subscribe(channel);
-        return $scope.showCreate = false;
-      }, 100);
+        Pubnub.publish({
+            channel: $scope.selectedChannel,
+            message: {
+                text: $scope.newMessage,
+                user: $scope.data.username
+            }
+        });
+
+        $scope.newMessage = '';
     };
+
+    $scope.createChannel = function () {
+        var channel;
+
+        if (!($scope.data.super && $scope.newChannel)) {
+            return;
+        }
+
+        channel = $scope.newChannel;
+        $scope.newChannel = '';
+
+        Pubnub.grant({
+            channel: channel,
+            read: true,
+            write: true,
+            callback: function () {
+                console.log(channel + " all set", arguments);
+            }
+        });
+
+        Pubnub.grant({
+            channel: channel + "-pnpres",
+            read: true,
+            write: false,
+            callback: function () {
+                console.log(channel + " presence all set", arguments);
+            }
+        });
+
+        Pubnub.publish({
+            channel: $scope.controlChannel,
+            message: channel
+        });
+
+        setTimeout(function () {
+            $scope.subscribe(channel);
+            $scope.showCreate = false;
+        }, 100);
+    };
+
     /* Select a channel to display chat history & presence*/
-
-    $scope.subscribe = function(channel) {
-      var _ref;
-      console.log('subscribe', channel);
-      if (channel === $scope.selectedChannel) {
-        return;
-      }
-      if ($scope.selectedChannel) {
-        PubNub.ngUnsubscribe({
-          channel: $scope.selectedChannel
-        });
-      }
-      $scope.selectedChannel = channel;
-      $scope.messages = ['Welcome to ' + channel];
-      PubNub.ngSubscribe({
-        channel: $scope.selectedChannel,
-        auth_key: $scope.authKey,
-        state: {
-          "city": ((_ref = $rootScope.data) != null ? _ref.city : void 0) || 'unknown'
-        },
-        error: function() {
-          return console.log(arguments);
+    $scope.subscribe = function (channel) {
+        if (channel === $scope.selectedChannel) {
+            return;
         }
-      });
-      $rootScope.$on(PubNub.ngPrsEv($scope.selectedChannel), function(ngEvent, payload) {
-        return $scope.$apply(function() {
-          var newData, userData;
-          userData = PubNub.ngPresenceData($scope.selectedChannel);
-          newData = {};
-          $scope.users = PubNub.map(PubNub.ngListPresence($scope.selectedChannel), function(x) {
-            var newX;
-            newX = x;
-            if (x.replace) {
-              newX = x.replace(/\w+__/, "");
+
+        var scheduledHereNowIntervalMs = 60000,
+            presencePool = [];
+
+        $scope.users = {};
+
+        if ($scope.selectedChannel) {
+            Pubnub.unsubscribe({
+                channel: $scope.selectedChannel
+            });
+        }
+
+        $scope.selectedChannel = channel;
+        $scope.messages = ['Welcome to ' + channel];
+
+        Pubnub.subscribe({
+            channel: $scope.selectedChannel,
+            auth_key: $scope.authKey,
+            state: {
+                city: $rootScope.data.city || 'unknown city',
+                name: $scope.data.username
+            },
+            connect: function () {
+                synchronizeUsers();
+                setInterval(synchronizeUsers, scheduledHereNowIntervalMs);
             }
-            if (x.uuid) {
-              newX = x.uuid.replace(/\w+__/, "");
+        });
+
+        function addToPresencePool (pnEvent) {
+            presencePool.push(pnEvent);
+        }
+
+        function applyPresencePool () {
+            if (presencePool === null) return;
+
+            var l = presencePool.length,
+                i;
+
+            for (i = 0; i < l; i++) {
+                applyEvent(presencePool[i]);
             }
-            newData[newX] = userData[x] || {};
-            return newX;
-          });
-          return $scope.userData = newData;
+
+            presencePool = null;
+        }
+
+        function applyEvent (pnEvent) {
+            if ('data' in pnEvent) {
+                switch (pnEvent.action) {
+                    case 'join':
+                        // fallback to previous version user naming
+                        if ('data' in pnEvent && !('name' in pnEvent.data)) {
+                            pnEvent.data.name = pnEvent.uuid.replace(/\w+__/, "");
+                        }
+
+                        $scope.$apply(function () {
+                            $scope.users[pnEvent.uuid] = pnEvent.data;
+                        });
+                        break;
+                    case 'leave':
+                        $scope.$apply(function () {
+                            delete $scope.users[pnEvent.uuid];
+                        });
+                        delete $scope.users[pnEvent.uuid];
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        function synchronizeUsers () {
+            Pubnub.here_now({
+                channel: $scope.selectedChannel,
+                state: true,
+                callback: function (response) {
+                    if (!('uuids' in response)) {
+                        console.warn("There are not users on channel '" + $scope.selectedChannel + "'");
+                        return;
+                    }
+
+                    var newUsersData = {},
+                        length = response.uuids.length,
+                        currentUser,
+                        i;
+
+                    for (i = 0; i < length; i++) {
+                        currentUser = response.uuids[i];
+                        newUsersData[currentUser.uuid] = currentUser.state;
+
+                        // fallback to previous version user naming
+                        if ('state' in currentUser && !('name' in currentUser.state)) {
+                            newUsersData[currentUser.uuid]['name'] = currentUser.uuid.replace(/\w+__/, "");
+                        }
+                    }
+
+                    $scope.$apply(function () {
+                        $scope.users = newUsersData;
+                    });
+
+                    applyPresencePool();
+                }
+            });
+        }
+
+        $rootScope.$on(Pubnub.getPresenceEventNameFor($scope.selectedChannel), function (ngEvent, message) {
+            var pnEvent = message[0],
+                channel = message[2];
+
+            if (channel === $scope.selectedChannel) {
+                if (presencePool === null) {
+                    applyEvent(pnEvent);
+                } else {
+                    addToPresencePool(pnEvent);
+                }
+            }
         });
-      });
-      PubNub.ngHereNow({
-        channel: $scope.selectedChannel
-      });
-      $rootScope.$on(PubNub.ngMsgEv($scope.selectedChannel), function(ngEvent, payload) {
-        var msg;
-        msg = payload.message.user ? "[" + payload.message.user + "] " + payload.message.text : "[unknown] " + payload.message;
-        return $scope.$apply(function() {
-          return $scope.messages.unshift(msg);
+
+        function wrapMessage(message) {
+            return message.user ? "[" + message.user + "] " + message.text : "[unknown] " + message;
+        }
+
+        $rootScope.$on(Pubnub.getMessageEventNameFor($scope.selectedChannel), function (ngEvent, payload) {
+            $scope.$apply(function () {
+                $scope.messages.unshift(wrapMessage(payload[0]));
+            });
         });
-      });
-      return PubNub.ngHistory({
-        channel: $scope.selectedChannel,
-        auth_key: $scope.authKey,
-        count: 500
-      });
+
+        Pubnub.history({
+            channel: $scope.selectedChannel,
+            auth_key: $scope.authKey,
+            count: 500,
+            reverse: false,
+            callback: function (result) {
+                var messages = result[0],
+                    wrappedMessagesArray = [],
+                    length = messages.length,
+                    i;
+
+                for (i = 0; i < length; i++) {
+                    wrappedMessagesArray[i] = wrapMessage(messages[i]);
+                }
+
+                $scope.$apply(function () {
+                    $scope.messages = wrappedMessagesArray.reverse();
+                })
+            }
+        });
     };
-    /* When controller initializes, subscribe to retrieve channels from "control channel"*/
 
-    PubNub.ngSubscribe({
-      channel: $scope.controlChannel
+    Pubnub.subscribe({
+        channel: $scope.controlChannel,
+        triggerEvent: true
     });
-    /* Register for channel creation message events*/
 
-    $rootScope.$on(PubNub.ngMsgEv($scope.controlChannel), function(ngEvent, payload) {
-      return $scope.$apply(function() {
-        if ($scope.channels.indexOf(payload.message) < 0) {
-          return $scope.channels.push(payload.message);
-        }
-      });
+    $rootScope.$on(Pubnub.getMessageEventNameFor($scope.controlChannel), function (ngEvent, payload) {
+        $scope.$apply(function () {
+            if ($scope.channels.indexOf(payload.message) < 0) {
+                $scope.channels.push(payload.message);
+            }
+        });
     });
+
     /* Get a reasonable historical backlog of messages to populate the channels list*/
-
-    PubNub.ngHistory({
-      channel: $scope.controlChannel,
-      count: 500
+    Pubnub.history({
+        channel: $scope.controlChannel,
+        count: 500,
+        callback: function (response) {
+            $scope.channels = _.uniq(response[0]);
+        }
     });
+
     /* and finally, create and/or enter the 'WaitingRoom' channel*/
-
     if ((_ref = $scope.data) != null ? _ref["super"] : void 0) {
-      $scope.newChannel = 'WaitingRoom';
-      return $scope.createChannel();
+        $scope.newChannel = 'WaitingRoom';
+        $scope.createChannel();
     } else {
-      return $scope.subscribe('WaitingRoom');
+        $scope.subscribe('WaitingRoom');
     }
-  });
 
-}).call(this);
+    $scope.sign_out = function () {
+        Pubnub.unsubscribe({
+            channel: $scope.channels,
+            callback: function () {
+                $location.path('/join');
+            }
+        });
+    };
+});
