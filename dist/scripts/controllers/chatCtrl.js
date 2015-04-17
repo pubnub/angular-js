@@ -1,87 +1,6 @@
-// TODO: super user behaviour
-angular.module('PubNubAngularApp').controller('JoinCtrl', function ($rootScope, $scope, $location, Pubnub) {
-    "use strict";
-
-    $rootScope.initialized = false;
-
-    $scope.data = {
-        username: 'Anonymous ' + Math.floor(Math.random() * 1000)
-    };
-
-    $scope.join = function () {
-        var _ref, _ref1, _ref2;
-
-        // TODO: simplify initialization
-        $rootScope.data || ($rootScope.data = {});
-        $rootScope.data.username = (_ref = $scope.data) != null ? _ref.username : void 0;
-        $rootScope.data.city = (_ref1 = $scope.data) != null ? _ref1.city : void 0;
-        $rootScope.data.super = (_ref2 = $scope.data) != null ? _ref2.super : void 0;
-        $rootScope.data.uuid = Math.floor(Math.random() * 1000000) + '__' + $scope.data.username;
-        $rootScope.secretKey = $scope.data["super"] ? 'sec-c-MmIzMDAzNDMtODgxZC00YzM3LTk1NTQtMzc4NWQ1NmZhYjIy' : null;
-        $rootScope.authKey = $scope.data["super"] ? 'ChooseABetterSecret' : null;
-
-        Pubnub.init({
-            subscribe_key: 'sub-c-d66562f0-62b0-11e3-b12d-02ee2ddab7fe',
-            publish_key: 'pub-c-e2b65946-31f0-4941-a1b8-45bab0032dd8',
-            secret_key: $rootScope.secretKey,
-            auth_key: $rootScope.authKey,
-            uuid: $rootScope.data.uuid,
-            ssl: true
-        });
-
-        $rootScope.initialized = true;
-
-        if ($scope.data["super"]) {
-
-            /* Grant access to the SuperHeroes room for supers only!*/
-            Pubnub.grant({
-                channel: 'SuperHeroes',
-                auth_key: $rootScope.authKey,
-                read: true,
-                write: true,
-                callback: function () {
-                    return console.log('SuperHeroes! all set', arguments);
-                }
-            });
-
-            Pubnub.grant({
-                channel: "SuperHeroes-pnpres",
-                auth_key: $rootScope.authKey,
-                read: true,
-                write: false,
-                callback: function () {
-                    return console.log('SuperHeroes! presence all set', arguments);
-                }
-            });
-
-            Pubnub.grant({
-                channel: '__controlchannel',
-                read: true,
-                write: true,
-                callback: function () {
-                    return console.log('control channel all set', arguments);
-                }
-            });
-
-            Pubnub.grant({
-                channel: '__controlchannel-pnpres',
-                read: true,
-                write: false,
-                callback: function () {
-                    return console.log('control channel presence all set', arguments);
-                }
-            });
-        }
-
-        $location.path('/chat');
-    };
-});
-
 angular.module('PubNubAngularApp').controller('ChatCtrl', function ($rootScope, $scope, $location, Pubnub) {
-    var _ref;
-
     if (!$rootScope.initialized) {
-        $location.path('/join');
+        return $location.path('/join');
     }
 
     /* Use a "control channel" to collect channel creation messages*/
@@ -120,30 +39,26 @@ angular.module('PubNubAngularApp').controller('ChatCtrl', function ($rootScope, 
             write: true,
             callback: function () {
                 console.log(channel + " all set", arguments);
+                Pubnub.grant({
+                    channel: channel + "-pnpres",
+                    read: true,
+                    write: false,
+                    callback: function () {
+                        console.log(channel + " presence all set", arguments);
+                        Pubnub.publish({
+                            channel: $scope.controlChannel,
+                            message: channel,
+                            callback: function () {
+                                $scope.subscribe(channel);
+                                $scope.showCreate = false;
+                            }
+                        });
+                    }
+                });
             }
         });
-
-        Pubnub.grant({
-            channel: channel + "-pnpres",
-            read: true,
-            write: false,
-            callback: function () {
-                console.log(channel + " presence all set", arguments);
-            }
-        });
-
-        Pubnub.publish({
-            channel: $scope.controlChannel,
-            message: channel
-        });
-
-        setTimeout(function () {
-            $scope.subscribe(channel);
-            $scope.showCreate = false;
-        }, 100);
     };
 
-    /* Select a channel to display chat history & presence*/
     $scope.subscribe = function (channel) {
         if (channel === $scope.selectedChannel) {
             return;
@@ -173,7 +88,8 @@ angular.module('PubNubAngularApp').controller('ChatCtrl', function ($rootScope, 
             connect: function () {
                 synchronizeUsers();
                 setInterval(synchronizeUsers, scheduledHereNowIntervalMs);
-            }
+            },
+            triggerEvents: ['callback', 'presence']
         });
 
         function addToPresencePool (pnEvent) {
@@ -252,10 +168,7 @@ angular.module('PubNubAngularApp').controller('ChatCtrl', function ($rootScope, 
             });
         }
 
-        $rootScope.$on(Pubnub.getPresenceEventNameFor($scope.selectedChannel), function (ngEvent, message) {
-            var pnEvent = message[0],
-                channel = message[2];
-
+        $rootScope.$on(Pubnub.getPresenceEventNameFor($scope.selectedChannel), function (ngEvent, pnEvent, env, channel) {
             if (channel === $scope.selectedChannel) {
                 if (presencePool === null) {
                     applyEvent(pnEvent);
@@ -269,9 +182,9 @@ angular.module('PubNubAngularApp').controller('ChatCtrl', function ($rootScope, 
             return message.user ? "[" + message.user + "] " + message.text : "[unknown] " + message;
         }
 
-        $rootScope.$on(Pubnub.getMessageEventNameFor($scope.selectedChannel), function (ngEvent, payload) {
+        $rootScope.$on(Pubnub.getMessageEventNameFor($scope.selectedChannel), function (ngEvent, message) {
             $scope.$apply(function () {
-                $scope.messages.unshift(wrapMessage(payload[0]));
+                $scope.messages.unshift(wrapMessage(message));
             });
         });
 
@@ -297,17 +210,18 @@ angular.module('PubNubAngularApp').controller('ChatCtrl', function ($rootScope, 
         });
     };
 
-    Pubnub.subscribe({
-        channel: $scope.controlChannel,
-        triggerEvent: true
-    });
-
-    $rootScope.$on(Pubnub.getMessageEventNameFor($scope.controlChannel), function (ngEvent, payload) {
-        $scope.$apply(function () {
-            if ($scope.channels.indexOf(payload.message) < 0) {
-                $scope.channels.push(payload.message);
+    $scope.signOut = function () {
+        Pubnub.unsubscribe({
+            channel: $scope.channels,
+            callback: function () {
+                $location.path('/join');
             }
         });
+    };
+
+    Pubnub.subscribe({
+        channel: $scope.controlChannel,
+        triggerEvents: ['callback']
     });
 
     /* Get a reasonable historical backlog of messages to populate the channels list*/
@@ -319,20 +233,19 @@ angular.module('PubNubAngularApp').controller('ChatCtrl', function ($rootScope, 
         }
     });
 
+    $rootScope.$on(Pubnub.getMessageEventNameFor($scope.controlChannel), function (ngEvent, payload) {
+        $scope.$apply(function () {
+            if ($scope.channels.indexOf(payload.message) < 0) {
+                $scope.channels.push(payload.message);
+            }
+        });
+    });
+
     /* and finally, create and/or enter the 'WaitingRoom' channel*/
-    if ((_ref = $scope.data) != null ? _ref["super"] : void 0) {
+    if (angular.isObject($scope.data) && $scope.data.super) {
         $scope.newChannel = 'WaitingRoom';
         $scope.createChannel();
     } else {
         $scope.subscribe('WaitingRoom');
     }
-
-    $scope.sign_out = function () {
-        Pubnub.unsubscribe({
-            channel: $scope.channels,
-            callback: function () {
-                $location.path('/join');
-            }
-        });
-    };
 });
