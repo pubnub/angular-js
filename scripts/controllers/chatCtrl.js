@@ -229,7 +229,7 @@ angular.module('PubNubAngularApp').controller('ChatCtrl', function ($rootScope, 
         channel: $scope.controlChannel,
         count: 500,
         callback: function (response) {
-            $scope.channels = _.uniq(response[0]);
+            $scope.channels = uniq(response[0]);
         }
     });
 
@@ -247,5 +247,22 @@ angular.module('PubNubAngularApp').controller('ChatCtrl', function ($rootScope, 
         $scope.createChannel();
     } else {
         $scope.subscribe('WaitingRoom');
+    }
+
+    function uniq (array) {
+        var result = [],
+            length = array.length,
+            current,
+            i;
+
+        for (i = 0; i < length; i++) {
+            current = array[i];
+
+            if (result.indexOf(current) === -1) {
+                result.push(current);
+            }
+        }
+
+        return result;
     }
 });
