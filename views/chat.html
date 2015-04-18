@@ -1,98 +1,108 @@
 <div class='container'>
-<div class='col-md-12' ng-include src="'views/_nav.html'"></div>
+    <div class='col-md-12' ng-include src="'views/_nav.html'"></div>
 </div>
 <div class='container'>
-<div class='col-md-12' ng-include src="'views/_happy.html'"></div>
+    <div class='col-md-12' ng-include src="'views/_happy.html'"></div>
 </div>
 <div class='container'>
-<section class='chat-section' id='chat_application'>
-<div class='container'>
-<h2>
-PubNub AngularJS Chat Example
-</h2>
-<p>
-<span class='label label-success' ng-show='selectedChannel'>And... We're Live!</span>
-Channels are listed across the screen. To send a chat message,
-enter a message in the box and click the 'Send' button.
-</p>
-<div class='dialog dialog-success'>
-<h6>
-Welcome {{data.username}}, click to select a channel below (
-<a ng-click='signOut()'>sign out</a>
-)
-</h6>
-<ul class='list-unstyled list-inline' ng-show='!channels'>
-<li>There are no channels. Log in as super to create some!</li>
-</ul>
-<ul class='list-unstyled list-inline'>
-<li class='roomlabel' ng-repeat='channel in channels'>
-<a class='btn btn-info' href='' ng-class="{'label-default': user != data.username, 'label-info': (channel != selectedChannel), 'label-warning':(channel == selectedChannel)}" ng-click='subscribe(channel)'>
-<i class='fa' ng-class="{'fa-spin':(channel == selectedChannel), 'fa-spinner':(channel == selectedChannel), 'fa-comments':(channel != selectedChannel)}"></i>
-{{channel}}
-</a>
-</li>
-<li class='roomlabel' ng-show='data.super'>
-<a class='btn btn-danger' href='' ng-click='subscribe("SuperHeroes")'>
-<i class='fa' ng-class="{'fa-spin':('SuperHeroes' == selectedChannel), 'fa-spinner':('SuperHeroes' == selectedChannel), 'fa-comments':('SuperHeroes' != selectedChannel)}"></i>
-SuperHeroes!
-</a>
-</li>
-<li class='roomlabel' ng-show='data.super'>
-<a class='btn btn-default' href='' ng-click='showCreate = !showCreate'>
-<i class='fa fa-magic'></i>
-Create new...
-</a>
-</li>
-<div ng-show='showCreate'>
-<form ng-submit='createChannel()'>
-<h6>Create New Room</h6>
-<div class='input-group'>
-<input class='input-sm form-control' ng-model='newChannel' placeholder='Room Name' type='text'>
+    <section class='chat-section' id='chat_application'>
+        <div class='container'>
+            <h2>
+                PubNub AngularJS Chat Example
+            </h2>
+
+            <p>
+                <span class='label label-success' ng-show='selectedChannel'>And... We're Live!</span>
+                Channels are listed across the screen. To send a chat message,
+                enter a message in the box and click the 'Send' button.
+            </p>
+
+            <div class='dialog dialog-success'>
+                <h6>
+                    Welcome {{data.username}}, click to select a channel below (
+                    <a ng-click='signOut()'>sign out</a>
+                    )
+                </h6>
+                <ul class='list-unstyled list-inline' ng-show='!channels'>
+                    <li>There are no channels. Log in as super to create some!</li>
+                </ul>
+                <ul class='list-unstyled list-inline'>
+                    <li class='roomlabel' ng-repeat='channel in channels'>
+                        <a class='btn btn-info' href=''
+                           ng-class="{'label-default': user != data.username, 'label-info': (channel != selectedChannel), 'label-warning':(channel == selectedChannel)}"
+                           ng-click='subscribe(channel)'>
+                            <i class='fa'
+                               ng-class="{'fa-spin':(channel == selectedChannel), 'fa-spinner':(channel == selectedChannel), 'fa-comments':(channel != selectedChannel)}"></i>
+                            {{channel}}
+                        </a>
+                    </li>
+                    <li class='roomlabel' ng-show='data.super'>
+                        <a class='btn btn-danger' href='' ng-click='subscribe("SuperHeroes")'>
+                            <i class='fa'
+                               ng-class="{'fa-spin':('SuperHeroes' == selectedChannel), 'fa-spinner':('SuperHeroes' == selectedChannel), 'fa-comments':('SuperHeroes' != selectedChannel)}"></i>
+                            SuperHeroes!
+                        </a>
+                    </li>
+                    <li class='roomlabel' ng-show='data.super'>
+                        <a class='btn btn-default' href='' ng-click='showCreate = !showCreate'>
+                            <i class='fa fa-magic'></i>
+                            Create new...
+                        </a>
+                    </li>
+                    <div ng-show='showCreate'>
+                        <form ng-submit='createChannel()'>
+                            <h6>Create New Room</h6>
+
+                            <div class='input-group'>
+                                <input class='input-sm form-control' ng-model='newChannel' placeholder='Room Name'
+                                       type='text'>
 <span class='input-group-btn'>
 <input class='input-sm btn btn-default' type='submit' value='Go!'>
 </span>
-</div>
-<br>
-<br>
-</form>
-</div>
-</ul>
-</div>
-<div class='row'>
-<div class='col-md-2'>
-<small class='marker'>Online Users</small>
-<ul class='list-unstyled'>
-<li ng-repeat='user in users'>
-<span class='label btn-mini userlabel' ng-class="{'label-default': (user.name != data.username), 'label-info': (user.name == data.username)}" title='(Location: {{users[user].city || "unknown"}})'>
+                            </div>
+                            <br>
+                            <br>
+                        </form>
+                    </div>
+                </ul>
+            </div>
+            <div class='row'>
+                <div class='col-md-2'>
+                    <small class='marker'>Online Users</small>
+                    <ul class='list-unstyled'>
+                        <li ng-repeat='user in users'>
+<span class='label btn-mini userlabel'
+      ng-class="{'label-default': (user.name != data.username), 'label-info': (user.name == data.username)}"
+      title='(Location: {{users[user].city || "unknown"}})'>
 <i class='fa fa-user'></i>
 {{user.name}}
 </span>
-</li>
-</ul>
-</div>
-<div class='col-md-10'>
-<small class='marker'>Chat History</small>
-<form ng-submit='publish()'>
-<div class='input-group'>
-<input class='input-sm form-control' ng-model='newMessage' type='text'>
+                        </li>
+                    </ul>
+                </div>
+                <div class='col-md-10'>
+                    <small class='marker'>Chat History</small>
+                    <form ng-submit='publish()'>
+                        <div class='input-group'>
+                            <input class='input-sm form-control' ng-model='newMessage' type='text'>
 <span class='input-group-btn'>
 <input class='input-sm btn btn-default' type='submit' value='Send'>
 </span>
-</div>
-</form>
-<div class='well chatbox' id='chat_history'>
-<ul class='list-unstyled'>
-<li ng-repeat='message in messages track by $index'>
-<i class='fa fa-comment'></i>
-&nbsp;
-{{message}}
-</li>
-</ul>
-</div>
-</div>
-</div>
-</div>
-</section>
+                        </div>
+                    </form>
+                    <div class='well chatbox' id='chat_history'>
+                        <ul class='list-unstyled'>
+                            <li ng-repeat='message in messages track by $index'>
+                                <i class='fa fa-comment'></i>
+                                &nbsp;
+                                {{message}}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 </div>
 <div ng-include src="'views/_content.html'"></div>
 <div ng-include src="'views/_footer.html'"></div>
