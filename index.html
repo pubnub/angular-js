@@ -5,37 +5,31 @@
     <title>AngularJS PubNub Chat Application</title>
     <meta name="viewport" content="width=device-width">
 
-    <script src="../app/components/jquery/dist/jquery.js"></script>
-    <script src="../app/components/underscore/underscore.js"></script>
-    <script src="../app/components/pubnub/web/pubnub.js"></script>
-    <script src="../app/components/angular/angular.js"></script>
-    <script src="../app/components/angular-route/angular-route.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="//cdn.pubnub.com/pubnub-3.7.10.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.0-rc.0/angular.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.0-rc.0/angular-route.min.js"></script>
 
-
-    <!-- build:css styles/main.css -->
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="styles/prettify.css">
-    <link rel="stylesheet" href="styles/flat-ui.css">
-    <link rel="stylesheet" href="styles/main.css">
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
-    <!-- endbuild -->
-  </head>
-  <body ng-app="PubNubAngularApp">
-    <div ng-view />
-
-    <!-- build:js(.tmp) scripts/scripts.js -->
-    <script src="../app/components/pubnub-angular/dist/pubnub-angular.js"></script>
+    <script src="//cdn.rawgit.com/pubnub/pubnub-angular/e5ec5c56174ded3c1dd952efebb78ae69740ade8/dist/pubnub-angular.js"></script>
     <script src="scripts/app.js"></script>
     <script src="scripts/controllers/joinCtrl.js"></script>
     <script src="scripts/controllers/chatCtrl.js"></script>
 
-    <!-- endbuild -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles/prettify.css">
+    <link rel="stylesheet" href="styles/flat-ui.css">
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.css">
+  </head>
+  <body ng-app="PubNubAngularApp">
+    <div ng-view />
 
     <script language="javascript">
       window.scrl2 = function(el) {
         if (!$(el)[0]) {
           return;
         }
+
         $('html, body').animate({
           scrollTop: $(el).offset().top
         }, 600);
